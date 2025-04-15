@@ -50,15 +50,16 @@
 
 :star2: Nexus can generate realistic `safety-critical` driving scenarios by flexibly controlling the future state of a scene, with the assistance of NeRF.
 
+
 <div style="display: flex; justify-content: center; align-items: center; gap: 1%;">
 
-  <img src="https://opendrivelab.github.io/Nexus/resources/nerf 1.gif" width="24%" alt="Video 1">
+  <img src="https://opendrivelab.github.io/Nexus/resources/nerf-1.gif" width="24%" alt="Video 1">
 
-  <img src="https://opendrivelab.github.io/Nexus/resources/nerf 2.gif" width="24%" alt="Video 2">
+  <img src="https://opendrivelab.github.io/Nexus/resources/nerf-2.gif" width="24%" alt="Video 2">
 
-  <img src="https://opendrivelab.github.io/Nexus/resources/nerf 3.gif" width="24%" alt="Video 3">
+  <img src="https://opendrivelab.github.io/Nexus/resources/nerf-3.gif" width="24%" alt="Video 3">
 
-  <img src="https://opendrivelab.github.io/Nexus/resources/nerf 4.gif" width="24%" alt="Video 4">
+  <img src="https://opendrivelab.github.io/Nexus/resources/nerf-4.gif" width="24%" alt="Video 4">
 
 </div>
 
