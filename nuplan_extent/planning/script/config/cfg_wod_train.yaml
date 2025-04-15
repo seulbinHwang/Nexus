@@ -1,0 +1,360 @@
+group: /cpfs01/user/yenaisheng/SceneGen/logs
+experiment_name: train
+job_name: wod
+date_format: '%Y.%m.%d.%H.%M.%S'
+experiment_uid: 2025.04.14.14.08.19
+experiment: train/wod/2025.04.14.14.08.19
+output_dir: /cpfs01/user/yenaisheng/SceneGen/logs/train/wod/2025.04.14.14.08.19
+metric_dir: metrics
+aggregator_metric_dir: aggregator_metric
+runner_report_file: runner_report.parquet
+log_config: false
+max_number_of_workers: null
+seed: 0
+enable_profiling: false
+logger_level: info
+logger_format_string: null
+scenario_builder:
+  _target_: nuplan_extent.planning.scenario_builder.wod_db.wod_scenario_builder_v1_1.WodScenarioBuilder
+  _convert_: all
+  data_root: /cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl
+  training_token_list_path: /cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl/training_token_list.txt
+  validation_token_list_path: /cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl/validation_token_list.txt
+  db_files: null
+  subsample_ratio: 1
+  start_index: 0
+scenario_filter:
+  _target_: nuplan.planning.scenario_builder.scenario_filter.ScenarioFilter
+  _convert_: all
+  scenario_types: null
+  scenario_tokens: null
+  log_names: null
+  map_names: null
+  num_scenarios_per_type: null
+  limit_total_scenarios: null
+  timestamp_threshold_s: null
+  ego_displacement_minimum_m: null
+  ego_start_speed_threshold: null
+  ego_stop_speed_threshold: null
+  speed_noise_tolerance: null
+  expand_scenarios: true
+  remove_invalid_goals: true
+  shuffle: true
+model:
+  _target_: nuplan_extent.planning.training.modeling.models.nexus.Nexus
+  _convert_: all
+  diffuser:
+    _target_: nuplan_extent.planning.training.modeling.models.diffusion.scenediffusion.simpleDiffusion
+    _convert_: all
+    pred_param: v
+    schedule: shifted_cosine
+    steps: 32
+    model:
+      _target_: nuplan_extent.planning.training.modeling.models.diffusion.models.diffusion.Nexus
+      _convert_: all
+      nblocks: 4
+      hidden_dim: 256
+      scene_tensor_dim: 8
+  global_encoder:
+    _target_: nuplan_extent.planning.training.modeling.models.encoders.perciever_context_encoder.PercieverEncoder
+    _convert_: all
+    num_latents: 128
+    latent_dim: 256
+    input_dim: 7
+    num_blocks: 2
+  render:
+    _target_: nuplan_extent.planning.training.modeling.models.renders.gump_render.GUMPRender
+    _convert_: all
+  postprocessor:
+    _target_: nuplan_extent.planning.training.modeling.models.post_processors.gump_naive_planner.GUMPNaivePlanner
+    _convert_: all
+  future_trajectory_sampling:
+    _target_: nuplan.planning.simulation.trajectory.trajectory_sampling.TrajectorySampling
+    _convert_: all
+    num_poses: 8
+    time_horizon: 4.0
+  feature_builders:
+  - _target_: nuplan_extent.planning.training.preprocessing.feature_builders.waymo_nexus_feature_builder.NexusFeatureBuilder
+    _convert_: all
+    radius: 104.0
+    max_num_map_objects: 256
+    num_points_each_polyline: 21
+    map_dim_points_polyline: 7
+    center_offset:
+    - 0.0
+    - 0.0
+    agent_features:
+    - VEHICLE
+    - PEDESTRIAN
+    - BICYCLE
+    longitudinal_offset: 0.0
+    past_time_horizon: 2.0
+    past_num_steps: 4
+    future_time_horizon: 8.0
+    future_num_steps: 16
+    num_max_used_agents: 256
+    num_max_agents:
+    - 256
+    - 256
+    - 128
+  target_builders:
+  - _target_: nuplan_extent.planning.training.preprocessing.target_builders.sim_agents_target_builder_v2.SimAgentsTargetBuilderV2
+    _convert_: all
+    future_trajectory_sampling:
+      _target_: nuplan.planning.simulation.trajectory.trajectory_sampling.TrajectorySampling
+      _convert_: all
+      num_poses: 8
+      time_horizon: 4.0
+  num_paralell_scenario: 32
+  downstream_task: null
+worker:
+  _target_: nuplan.planning.utils.multithreading.worker_parallel.SingleMachineParallelExecutor
+  _convert_: all
+  use_process_pool: false
+  max_workers: null
+distribute_by_scenario: true
+distributed_timeout_seconds: 7200
+selected_simulation_metrics: null
+verbose: false
+lightning:
+  distributed_training:
+    equal_variance_scaling_strategy: true
+  trainer:
+    checkpoint:
+      resume_training: true
+      save_top_k: 1
+      monitor: loss/train_loss
+      mode: min
+    params:
+      accelerator: gpu
+      strategy: ddp
+      devices: auto
+      num_nodes: 1
+      precision: 32
+      accumulate_grad_batches: 4
+      gradient_clip_val: 1.0
+      gradient_clip_algorithm: norm
+      logger: true
+      log_every_n_steps: 10
+      callbacks: null
+      plugins: null
+      fast_dev_run: false
+      check_val_every_n_epoch: 1
+      num_sanity_val_steps: 0
+      limit_train_batches: 1.0
+      limit_val_batches: 1.0
+      limit_test_batches: 1.0
+      max_time: '14:32:00:00'
+      max_epochs: 350
+      max_steps: -1
+      profiler: null
+      detect_anomaly: false
+      barebones: false
+      enable_checkpointing: true
+      enable_progress_bar: true
+      enable_model_summary: true
+      sync_batchnorm: false
+      use_distributed_sampler: true
+      inference_mode: true
+      deterministic: false
+      benchmark: false
+      val_check_interval: 1.0
+    overfitting:
+      enable: false
+      params:
+        overfit_batches: 0
+callbacks:
+  learning_rate_monitor_callback:
+    _target_: pytorch_lightning.callbacks.LearningRateMonitor
+    _convert_: all
+    logging_interval: step
+    log_momentum: true
+  model_checkpoint_callback:
+    _target_: nuplan.planning.training.callbacks.checkpoint_callback.ModelCheckpointAtEpochEnd
+    _convert_: all
+    save_last: true
+    dirpath: /cpfs01/user/yenaisheng/SceneGen/logs/train/wod/2025.04.14.14.08.19/best_model
+    save_top_k: 1
+    monitor: loss/train_loss
+    mode: min
+  visualization_nexus_callback:
+    _target_: nuplan_extent.planning.training.callbacks.visualization_nexus_callback.VisualizationNexusCallback
+    _convert_: all
+    num_scene_samples_to_vis: 1
+    num_noise_samples_to_vis: 3
+    log_train_every_n_epochs: 1
+    log_train_every_n_batches: 2000
+    log_val_every_n_epochs: 1
+    dataset: nuplan
+    canvas_size: 1664
+    pixel_size: 0.125
+    raster_type:
+      roadmap:
+      - 0.0
+      - 0.0
+      - 0.2
+      baseline_paths:
+      - 0.0
+      - 0.5
+      - 0.0
+      route:
+      - 0.0
+      - 0.0
+      - 0.2
+      drivable_area:
+      - 0.0
+      - 0.2
+      - 0.0
+      static_agents_raster:
+      - 1.0
+      - 0.0
+      - 0.0
+optimizer:
+  _target_: torch.optim.AdamW
+  _convert_: all
+  lr: 0.001
+  weight_decay: 0.01
+  betas:
+  - 0.9
+  - 0.999
+lr_scheduler:
+  _target_: nuplan_extent.planning.utils.warmup_cos_lr.WarmupCosLR
+  _convert_: all
+  optimizer: null
+  lr: 0.001
+  min_lr: 1.0e-06
+  epochs: 350
+  warmup_epochs: 10
+data_loader:
+  datamodule:
+    train_fraction: 1.0
+    val_fraction: 1.0
+    test_fraction: 1.0
+  params:
+    batch_size: 32
+    num_workers: 1
+    pin_memory: true
+    drop_last: true
+    sequential_train: false
+    sequential_val: false
+    sequential_test: false
+splitter:
+  _target_: nuplan_extent.planning.training.data_loader.wod_splitter.WodSplitter
+  _convert_: all
+  training_token_list_path: /cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl/training_token_list.txt
+  subsample_ratio: 1
+  start_index: 0
+  validation_token_list_path: /cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl/validation_token_list.txt
+objective:
+  diffusion_objective:
+    _target_: nuplan_extent.planning.training.modeling.objectives.diffusion_objective.DiffusionObjective
+    _convert_: all
+    weight: 1.0
+training_metric:
+  dummy_metric:
+    _target_: nuplan_extent.planning.training.modeling.metrics.dummy_metric.DummyMetric
+    _convert_: all
+aggregated_metric:
+  agent_behavior_prediction:
+    _target_: nuplan_extent.planning.training.modeling.aggregated_metrics.behavior_prediction.BehaviorPredictionMetric
+    _convert_: all
+    name: agent_bp
+    prediction_output_key: behavior_pred
+    exclude_ego: true
+    use_only_ego: false
+  intent_condtioned_agent_behavior_prediction:
+    _target_: nuplan_extent.planning.training.modeling.aggregated_metrics.behavior_prediction.BehaviorPredictionMetric
+    _convert_: all
+    name: intent_conditioned_agent_bp
+    prediction_output_key: intent_conditioned_behavior_pred
+    exclude_ego: true
+    use_only_ego: false
+  collision_rate_bp:
+    _target_: nuplan_extent.planning.training.modeling.aggregated_metrics.collision_rate.CollisionMetric
+    _convert_: all
+    name: collision_rate_bp
+    prediction_output_key: behavior_pred
+    exclude_ego: false
+    use_only_ego: false
+  collision_rate_gp:
+    _target_: nuplan_extent.planning.training.modeling.aggregated_metrics.collision_rate.CollisionMetric
+    _convert_: all
+    name: collision_rate_gp
+    prediction_output_key: intent_conditioned_behavior_pred
+    exclude_ego: false
+    use_only_ego: false
+  traj_metric_gp:
+    _target_: nuplan_extent.planning.training.modeling.aggregated_metrics.traj_metric.TrajMetric
+    _convert_: all
+    name: traj_metric_gp
+    prediction_output_key: intent_conditioned_behavior_pred
+    exclude_ego: false
+    use_only_ego: false
+  traj_metric_bp:
+    _target_: nuplan_extent.planning.training.modeling.aggregated_metrics.traj_metric.TrajMetric
+    _convert_: all
+    name: traj_metric_bp
+    prediction_output_key: behavior_pred
+    exclude_ego: false
+    use_only_ego: false
+data_augmentation:
+  convert_to_float:
+    _target_: nuplan_extent.planning.training.data_augmentation.convert_to_float.ConvertFloatAugmentor
+    _convert_: all
+val_data_augmentation:
+  convert_to_float:
+    _target_: nuplan_extent.planning.training.data_augmentation.convert_to_float.ConvertFloatAugmentor
+    _convert_: all
+scenario_type_weights:
+  scenario_type_sampling_weights:
+    enable: false
+    scenario_type_weights:
+      unknown: 1.0
+  scenario_type_loss_weights:
+    unknown: 1.0
+common_cfg:
+  input_cfg:
+    input_channel_indexes:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    raster_map_bev_range:
+    - -104.0
+    - -104.0
+    - 104.0
+    - 104.0
+    meshgrid:
+    - 0.5
+    - 0.5
+    target_width_wm: 416
+    target_height_wm: 416
+    target_width: 416
+    target_height: 416
+    target_pixel_size: 0.5
+    max_speed_normalizer: 24.0
+    dataset: nuplan
+    num_past_steps: 12
+    past_time_horizon: 6.0
+  output_cfg:
+    trajectory_steps: 8
+    time_horizon: 4.0
+  downstream_task: planning
+closed_loop: false
+cache:
+  cache_path: /cpfs01/shared/opendrivelab/yenaisheng/cache_waymo
+  use_cache_without_dataset: true
+  force_feature_computation: false
+  cleanup_cache: false
+  cache_metadata_path: /cpfs01/shared/opendrivelab/yenaisheng/cache_waymo/trainval/metadata/trainval_metadata_node_0.csv
+  force_recompute_features: null
+  versatile_caching: false
+py_func: train
+checkpoint:
+  resume: true
+  strict: true
+  ckpt_path: null
+objective_aggregate_mode: sum

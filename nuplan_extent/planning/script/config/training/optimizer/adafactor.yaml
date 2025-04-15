@@ -1,0 +1,9 @@
+_target_: nuplan_extent.planning.utils.adafactor.Adafactor
+_convert_: "all"
+
+lr: 3e-4  # learning rate
+clip_threshold: 1.0
+weight_decay: 0.01  # weight decay coefficient
+beta1: 0.9  # coefficients used for computing running averages of gradient and its square
+relative_step: False
+scale_parameter: False

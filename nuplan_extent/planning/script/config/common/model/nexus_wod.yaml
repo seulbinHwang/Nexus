@@ -1,0 +1,43 @@
+defaults:
+- nexus
+
+# Parameters for predicted trajectory
+future_trajectory_sampling:
+  _target_: nuplan.planning.simulation.trajectory.trajectory_sampling.TrajectorySampling
+  _convert_: 'all'
+  num_poses: ${common_cfg.output_cfg.trajectory_steps}  # number of poses in a trajectory
+  time_horizon: ${common_cfg.output_cfg.time_horizon}  # [s] time horizon of all poses
+
+# All feature builders
+feature_builders:
+  - _target_: nuplan_extent.planning.training.preprocessing.feature_builders.waymo_nexus_feature_builder.NexusFeatureBuilder
+    _convert_: all
+    radius: 104.0
+    max_num_map_objects: 256
+    num_points_each_polyline: 21
+    map_dim_points_polyline: 7
+    center_offset: 
+    - 0.0
+    - 0.0
+    agent_features:
+    - 'VEHICLE'
+    - 'PEDESTRIAN'
+    - 'BICYCLE'
+    longitudinal_offset: 0.0
+    past_time_horizon: 2.0
+    past_num_steps: 4
+    future_time_horizon: 8.0
+    future_num_steps: 16
+    num_max_used_agents: 256
+    num_max_agents:
+    - 256
+    - 256
+    - 128
+
+target_builders:
+  - _target_: nuplan_extent.planning.training.preprocessing.target_builders.sim_agents_target_builder_v2.SimAgentsTargetBuilderV2
+    _convert_: 'all'
+    future_trajectory_sampling: ${model.future_trajectory_sampling} 
+
+num_paralell_scenario: 32
+downstream_task: 'planning' # 'sim_agents'

@@ -1,0 +1,5 @@
+_target_: nuplan_extent.planning.training.data_loader.overfit_splitter.OverfitSplitter
+_convert_: 'all'
+
+number_of_train_samples: 1000
+scenario_num: 154

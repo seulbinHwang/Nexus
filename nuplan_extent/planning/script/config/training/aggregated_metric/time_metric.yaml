@@ -1,0 +1,7 @@
+time:
+  _target_: nuplan_extent.planning.training.modeling.aggregated_metrics.time.TimeMetric
+  _convert_: 'all'
+
+  name: "time"
+  prediction_output_key: "time_consume"
+

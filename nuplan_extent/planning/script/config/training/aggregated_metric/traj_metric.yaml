@@ -1,0 +1,18 @@
+traj_metric_gp:
+  _target_: nuplan_extent.planning.training.modeling.aggregated_metrics.traj_metric.TrajMetric
+  _convert_: 'all'
+
+  name: "traj_metric_gp"
+  prediction_output_key: "intent_conditioned_behavior_pred"
+  exclude_ego: False
+  use_only_ego: False
+
+traj_metric_bp:
+  _target_: nuplan_extent.planning.training.modeling.aggregated_metrics.traj_metric.TrajMetric
+  _convert_: 'all'
+
+  name: "traj_metric_bp"
+  prediction_output_key: "behavior_pred"
+  exclude_ego: False
+  use_only_ego: False
+

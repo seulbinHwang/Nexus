@@ -1,0 +1,35 @@
+# ego_behavior_prediction:
+#   _target_: nuplan_extent.planning.training.modeling.aggregated_metrics.behavior_prediction.BehaviorPredictionMetric
+#   _convert_: 'all'
+
+#   name: "ego_bp"
+#   prediction_output_key: "behavior_pred"
+#   exclude_ego: False
+#   use_only_ego: True
+
+agent_behavior_prediction:
+  _target_: nuplan_extent.planning.training.modeling.aggregated_metrics.behavior_prediction.BehaviorPredictionMetric
+  _convert_: 'all'
+
+  name: "agent_bp"
+  prediction_output_key: "behavior_pred"
+  exclude_ego: True
+  use_only_ego: False
+
+# intent_condtioned_ego_behavior_prediction:
+#   _target_: nuplan_extent.planning.training.modeling.aggregated_metrics.behavior_prediction.BehaviorPredictionMetric
+#   _convert_: 'all'
+
+#   name: "intent_conditioned_ego_bp"
+#   prediction_output_key: "intent_conditioned_behavior_pred"
+#   exclude_ego: False
+#   use_only_ego: True
+
+intent_condtioned_agent_behavior_prediction:
+  _target_: nuplan_extent.planning.training.modeling.aggregated_metrics.behavior_prediction.BehaviorPredictionMetric
+  _convert_: 'all'
+
+  name: "intent_conditioned_agent_bp"
+  prediction_output_key: "intent_conditioned_behavior_pred"
+  exclude_ego: True
+  use_only_ego: False

@@ -1,0 +1,5 @@
+sim_agents_metrics:
+  _target_: nuplan_extent.planning.training.modeling.aggregated_metrics.sim_agents_metrics.SimAgentsMetric
+  _convert_: 'all'
+
+  basepath: '/cpfs01/user/yenaisheng/tmp_pkl'

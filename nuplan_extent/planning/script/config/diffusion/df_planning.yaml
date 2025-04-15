@@ -1,0 +1,42 @@
+defaults:
+  - df_base
+
+# dataset info
+data_mean: null
+data_std: null
+reward_mean: 0.081254
+reward_std: 0.27322477
+observation_mean: [1.9327888e+00, 2.3744664e+00, 2.0562936e-04, -1.0198415e-03]
+observation_std: [0.89972174, 0.7093159, 2.2128615, 2.468173]
+action_mean: [0.00153824, 0.00433588]
+action_std: [0.7043469, 0.7506248]
+gamma: 1.0
+episode_len: 300
+env_id: df-planning-v1
+# non dataset info
+x_shape: null
+frame_stack: 10
+context_frames: 1
+open_loop_horizon: 50 #fixme
+use_reward: False
+causal: False
+plot_start_goal: True
+padding_mode: same
+# training hyperparameters
+weight_decay: 1e-4
+warmup_steps: 10000
+# diffusion-related
+guidance_scale: 2.0
+chunk_size: 300
+scheduling_matrix: pyramid
+
+diffusion:
+  stabilization_level: 10
+  beta_schedule: linear
+  objective: pred_x0
+  ddim_sampling_eta: 0.0
+  architecture:
+    network_size: 128
+    num_layers: 12
+    attn_heads: 4
+    dim_feedforward: 512

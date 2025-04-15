@@ -1,0 +1,35 @@
+# @package _global_
+job_name: training_wod_nexus
+py_func: train
+objective_aggregate_mode: sum
+
+defaults:
+  - override /splitter: wod
+  - override /data_augmentation:
+      - convert_to_float
+      # - change_norm
+      - reset_v
+  - override /val_data_augmentation:
+      - convert_to_float
+      # - change_norm
+      - reset_v
+  - override /objective:
+      - diffusion_objective
+  - override /scenario_builder: wod_v1_1
+  - override /model: nexus_wod
+  - override /scenario_filter: all_scenarios
+  - override /training_metric:
+    - dummy_metric
+  - override /aggregated_metric:
+    # - behavior_prediction_metrics
+    # - collision_rate
+    # - traj_metric
+    - sim_agents_metrics
+  - override /common_cfg: gump
+  - override /callbacks: 
+    - learning_rate_monitor_callback
+    - model_checkpoint_callback
+    - visualization_nexus_callback
+
+
+  

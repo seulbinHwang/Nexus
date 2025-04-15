@@ -1,0 +1,560 @@
+group: /cpfs01/shared/opendrivelab/opendrivelab_hdd/zhouyunsong/nuplan/trainval/cache_nuPlan
+experiment_name: caching
+job_name: cache_nuplan_log
+date_format: '%Y.%m.%d.%H.%M.%S'
+experiment_uid: 2025.03.12.21.57.35
+experiment: caching/cache_nuplan_log/2025.03.12.21.57.35
+output_dir: /cpfs01/shared/opendrivelab/opendrivelab_hdd/zhouyunsong/nuplan/trainval/cache_nuPlan/caching/cache_nuplan_log/2025.03.12.21.57.35
+metric_dir: metrics
+aggregator_metric_dir: aggregator_metric
+runner_report_file: runner_report.parquet
+log_config: false
+max_number_of_workers: null
+seed: 0
+enable_profiling: false
+logger_level: info
+logger_format_string: null
+scenario_builder:
+  vehicle_parameters:
+    _target_: nuplan.common.actor_state.vehicle_parameters.VehicleParameters
+    _convert_: all
+    width: 2.297
+    front_length: 4.049
+    rear_length: 1.127
+    cog_position_from_rear_axle: 1.67
+    height: 1.777
+    wheel_base: 3.089
+    vehicle_name: pacifica
+    vehicle_type: gen1
+  scenario_mapping:
+    _target_: nuplan.planning.scenario_builder.nuplan_db.nuplan_scenario_utils.ScenarioMapping
+    _convert_: all
+    subsample_ratio_override: 0.5
+    scenario_map:
+      accelerating_at_crosswalk:
+      - 9.0
+      - 0.0
+      accelerating_at_stop_sign:
+      - 9.0
+      - 0.0
+      accelerating_at_stop_sign_no_crosswalk:
+      - 9.0
+      - 0.0
+      accelerating_at_traffic_light:
+      - 9.0
+      - 0.0
+      accelerating_at_traffic_light_with_lead:
+      - 9.0
+      - 0.0
+      accelerating_at_traffic_light_without_lead:
+      - 9.0
+      - 0.0
+      behind_bike:
+      - 9.0
+      - 0.0
+      behind_long_vehicle:
+      - 9.0
+      - 0.0
+      behind_pedestrian_on_driveable:
+      - 9.0
+      - 0.0
+      behind_pedestrian_on_pickup_dropoff:
+      - 9.0
+      - 0.0
+      changing_lane:
+      - 9.0
+      - 0.0
+      changing_lane_to_left:
+      - 9.0
+      - 0.0
+      changing_lane_to_right:
+      - 9.0
+      - 0.0
+      changing_lane_with_lead:
+      - 9.0
+      - 0.0
+      changing_lane_with_trail:
+      - 9.0
+      - 0.0
+      crossed_by_bike:
+      - 9.0
+      - 0.0
+      crossed_by_vehicle:
+      - 9.0
+      - 0.0
+      following_lane_with_lead:
+      - 9.0
+      - 0.0
+      following_lane_with_slow_lead:
+      - 9.0
+      - 0.0
+      following_lane_without_lead:
+      - 9.0
+      - 0.0
+      high_lateral_acceleration:
+      - 9.0
+      - 0.0
+      high_magnitude_jerk:
+      - 9.0
+      - 0.0
+      high_magnitude_speed:
+      - 9.0
+      - 0.0
+      low_magnitude_speed:
+      - 9.0
+      - 0.0
+      medium_magnitude_speed:
+      - 9.0
+      - 0.0
+      near_barrier_on_driveable:
+      - 9.0
+      - 0.0
+      near_construction_zone_sign:
+      - 9.0
+      - 0.0
+      near_high_speed_vehicle:
+      - 9.0
+      - 0.0
+      near_long_vehicle:
+      - 9.0
+      - 0.0
+      near_multiple_bikes:
+      - 9.0
+      - 0.0
+      near_multiple_pedestrians:
+      - 9.0
+      - 0.0
+      near_multiple_vehicles:
+      - 9.0
+      - 0.0
+      near_pedestrian_at_pickup_dropoff:
+      - 9.0
+      - 0.0
+      near_pedestrian_on_crosswalk:
+      - 9.0
+      - 0.0
+      near_pedestrian_on_crosswalk_with_ego:
+      - 9.0
+      - 0.0
+      near_trafficcone_on_driveable:
+      - 9.0
+      - 0.0
+      on_all_way_stop_intersection:
+      - 9.0
+      - 0.0
+      on_carpark:
+      - 9.0
+      - 0.0
+      on_intersection:
+      - 9.0
+      - 0.0
+      on_pickup_dropoff:
+      - 9.0
+      - 0.0
+      on_stopline_crosswalk:
+      - 9.0
+      - 0.0
+      on_stopline_stop_sign:
+      - 9.0
+      - 0.0
+      on_stopline_traffic_light:
+      - 9.0
+      - 0.0
+      on_traffic_light_intersection:
+      - 9.0
+      - 0.0
+      starting_high_speed_turn:
+      - 9.0
+      - 0.0
+      starting_left_turn:
+      - 9.0
+      - 0.0
+      starting_low_speed_turn:
+      - 9.0
+      - 0.0
+      starting_protected_cross_turn:
+      - 9.0
+      - 0.0
+      starting_protected_noncross_turn:
+      - 9.0
+      - 0.0
+      starting_right_turn:
+      - 9.0
+      - 0.0
+      starting_straight_stop_sign_intersection_traversal:
+      - 9.0
+      - 0.0
+      starting_straight_traffic_light_intersection_traversal:
+      - 9.0
+      - 0.0
+      starting_u_turn:
+      - 9.0
+      - 0.0
+      starting_unprotected_cross_turn:
+      - 9.0
+      - 0.0
+      starting_unprotected_noncross_turn:
+      - 9.0
+      - 0.0
+      stationary:
+      - 9.0
+      - 0.0
+      stationary_at_crosswalk:
+      - 9.0
+      - 0.0
+      stationary_at_traffic_light_with_lead:
+      - 9.0
+      - 0.0
+      stationary_at_traffic_light_without_lead:
+      - 9.0
+      - 0.0
+      stationary_in_traffic:
+      - 9.0
+      - 0.0
+      stopping_at_crosswalk:
+      - 9.0
+      - 0.0
+      stopping_at_stop_sign_no_crosswalk:
+      - 9.0
+      - 0.0
+      stopping_at_stop_sign_with_lead:
+      - 9.0
+      - 0.0
+      stopping_at_stop_sign_without_lead:
+      - 9.0
+      - 0.0
+      stopping_at_traffic_light_with_lead:
+      - 9.0
+      - 0.0
+      stopping_at_traffic_light_without_lead:
+      - 9.0
+      - 0.0
+      stopping_with_lead:
+      - 9.0
+      - 0.0
+      traversing_crosswalk:
+      - 9.0
+      - 0.0
+      traversing_intersection:
+      - 9.0
+      - 0.0
+      traversing_narrow_lane:
+      - 9.0
+      - 0.0
+      traversing_pickup_dropoff:
+      - 9.0
+      - 0.0
+      traversing_traffic_light_intersection:
+      - 9.0
+      - 0.0
+      waiting_for_pedestrian_to_cross:
+      - 9.0
+      - 0.0
+      unknown:
+      - 9.0
+      - 0.0
+  _target_: nuplan.planning.scenario_builder.nuplan_db.nuplan_scenario_builder.NuPlanScenarioBuilder
+  _convert_: all
+  data_root: /cpfs01/shared/opendrivelab/opendrivelab_hdd/nuplan/dataset/nuplan-v1.1/splits/trainval
+  map_root: /cpfs01/shared/opendrivelab/opendrivelab_hdd/nuplan/dataset/maps
+  sensor_root: /cpfs01/shared/opendrivelab/opendrivelab_hdd/nuplan/dataset/nuplan-v1.1/sensor_blobs
+  db_files: null
+  map_version: nuplan-maps-v1.0
+  include_cameras: false
+  max_workers: null
+  verbose: false
+  scenario_pickle_path: null
+scenario_filter:
+  _target_: nuplan.planning.scenario_builder.scenario_filter.ScenarioFilter
+  _convert_: all
+  scenario_types: null
+  scenario_tokens: null
+  log_names: null
+  map_names: null
+  num_scenarios_per_type: null
+  limit_total_scenarios: null
+  timestamp_threshold_s: 15
+  ego_displacement_minimum_m: null
+  ego_start_speed_threshold: null
+  ego_stop_speed_threshold: null
+  speed_noise_tolerance: null
+  expand_scenarios: false
+  remove_invalid_goals: false
+  shuffle: false
+model:
+  _target_: nuplan_extent.planning.training.modeling.models.nexus.Nexus
+  _convert_: all
+  diffuser:
+    _target_: nuplan_extent.planning.training.modeling.models.diffusion.scenediffusion.simpleDiffusion
+    _convert_: all
+    pred_param: v
+    schedule: shifted_cosine
+    steps: 32
+    model:
+      _target_: nuplan_extent.planning.training.modeling.models.diffusion.models.diffusion.Nexus
+      _convert_: all
+      nblocks: 4
+      hidden_dim: 256
+      scene_tensor_dim: 8
+  global_encoder:
+    _target_: nuplan_extent.planning.training.modeling.models.encoders.perciever_context_encoder.PercieverEncoder
+    _convert_: all
+    num_latents: 128
+    latent_dim: 256
+    input_dim: 7
+    num_blocks: 2
+  render:
+    _target_: nuplan_extent.planning.training.modeling.models.renders.gump_render.GUMPRender
+    _convert_: all
+  postprocessor:
+    _target_: nuplan_extent.planning.training.modeling.models.post_processors.gump_naive_planner.GUMPNaivePlanner
+    _convert_: all
+  future_trajectory_sampling:
+    _target_: nuplan.planning.simulation.trajectory.trajectory_sampling.TrajectorySampling
+    _convert_: all
+    num_poses: 8
+    time_horizon: 4.0
+  feature_builders:
+  - _target_: nuplan_extent.planning.training.preprocessing.feature_builders.nexus_feature_builder.NexusFeatureBuilder
+    _convert_: all
+    agent_features:
+    - VEHICLE
+    - PEDESTRIAN
+    - BICYCLE
+    radius: 100.0
+    longitudinal_offset: 0.0
+    past_time_horizon: 2.0
+    past_num_steps: 4
+    future_time_horizon: 8.0
+    future_num_steps: 16
+    num_max_agents:
+    - 128
+    - 64
+    - 32
+    map_features:
+    - LANE
+    - LANE_CONNECTOR
+    - STOP_LINE
+    - CROSSWALK
+    map_num_points_polylines: 21
+    map_dim_points_polyline: 7
+    map_num_max_polylines: 128
+  target_builders:
+  - _target_: nuplan_extent.planning.training.preprocessing.feature_builders.ego_trajectory_with_past_target_builder.EgoTrajectoryWithPastTargetBuilder
+    _convert_: all
+    future_trajectory_sampling:
+      _target_: nuplan.planning.simulation.trajectory.trajectory_sampling.TrajectorySampling
+      _convert_: all
+      num_poses: 8
+      time_horizon: 4.0
+  num_paralell_scenario: 1
+  downstream_task: scenario_extrapolation
+worker:
+  _target_: nuplan.planning.utils.multithreading.worker_parallel.SingleMachineParallelExecutor
+  _convert_: all
+  use_process_pool: true
+  max_workers: 36
+distribute_by_scenario: true
+distributed_timeout_seconds: 7200
+selected_simulation_metrics: null
+verbose: false
+lightning:
+  distributed_training:
+    equal_variance_scaling_strategy: true
+  trainer:
+    checkpoint:
+      resume_training: false
+      save_top_k: 1
+      monitor: loss/val_loss
+      mode: min
+    params:
+      accelerator: gpu
+      strategy: ddp
+      devices: auto
+      num_nodes: 1
+      precision: 32
+      accumulate_grad_batches: 1
+      gradient_clip_val: 0.0
+      gradient_clip_algorithm: norm
+      logger: true
+      log_every_n_steps: 50
+      callbacks: null
+      plugins: null
+      fast_dev_run: false
+      check_val_every_n_epoch: 1
+      num_sanity_val_steps: 3
+      limit_train_batches: 1.0
+      limit_val_batches: 1.0
+      limit_test_batches: 1.0
+      max_time: 01:00:00:00
+      max_epochs: -1
+      max_steps: -1
+      profiler: null
+      detect_anomaly: true
+      barebones: false
+      enable_checkpointing: true
+      enable_progress_bar: true
+      enable_model_summary: true
+      sync_batchnorm: false
+      use_distributed_sampler: true
+      inference_mode: true
+      deterministic: false
+      benchmark: false
+callbacks:
+  learning_rate_monitor_callback:
+    _target_: pytorch_lightning.callbacks.LearningRateMonitor
+    _convert_: all
+    logging_interval: step
+    log_momentum: true
+  model_checkpoint_callback:
+    _target_: nuplan.planning.training.callbacks.checkpoint_callback.ModelCheckpointAtEpochEnd
+    _convert_: all
+    save_last: true
+    dirpath: /cpfs01/shared/opendrivelab/opendrivelab_hdd/zhouyunsong/nuplan/trainval/cache_nuPlan/caching/cache_nuplan_log/2025.03.12.21.57.35/best_model
+    save_top_k: 1
+    monitor: loss/val_loss
+    mode: min
+  visualization_nexus_callback:
+    _target_: nuplan_extent.planning.training.callbacks.visualization_nexus_callback.VisualizationNexusCallback
+    _convert_: all
+    num_scene_samples_to_vis: 1
+    num_noise_samples_to_vis: 3
+    log_train_every_n_epochs: 1
+    log_train_every_n_batches: 2000
+    log_val_every_n_epochs: 1
+    dataset: nuplan
+    canvas_size: 1664
+    pixel_size: 0.125
+    raster_type:
+      roadmap:
+      - 0.0
+      - 0.0
+      - 0.2
+      baseline_paths:
+      - 0.0
+      - 0.5
+      - 0.0
+      route:
+      - 0.0
+      - 0.0
+      - 0.2
+      drivable_area:
+      - 0.0
+      - 0.2
+      - 0.0
+      static_agents_raster:
+      - 1.0
+      - 0.0
+      - 0.0
+optimizer:
+  _target_: torch.optim.Adam
+  _convert_: all
+  lr: 5.0e-05
+  weight_decay: 0.0005
+  betas:
+  - 0.9
+  - 0.999
+data_loader:
+  datamodule:
+    train_fraction: 1.0
+    val_fraction: 1.0
+    test_fraction: 1.0
+  params:
+    batch_size: 2
+    num_workers: 8
+    pin_memory: true
+    drop_last: true
+    sequential_train: false
+    sequential_val: false
+    sequential_test: false
+splitter:
+  _target_: nuplan.planning.training.data_loader.log_splitter.LogSplitter
+  _convert_: all
+  log_splits:
+    train:
+    - 2021.10.22.18.02.31_veh-28_01717_02099
+    - 2021.10.22.18.45.52_veh-28_00008_00079
+    - 2021.10.22.18.45.52_veh-28_00168_00302
+    - 2021.10.22.18.45.52_veh-28_00313_00628
+    - 2021.10.22.18.45.52_veh-28_00651_00768
+    - 2021.10.22.18.45.52_veh-28_00780_00896
+    - 2021.10.22.18.45.52_veh-28_00907_00973
+    - 2021.10.22.18.45.52_veh-28_01093_01164
+    - 2021.10.22.18.45.52_veh-28_01175_01298
+    val:
+    - 2021.10.06.08.34.20_veh-53_00179_00244
+    - 2021.10.06.08.34.20_veh-53_00259_00711
+    - 2021.10.06.08.34.20_veh-53_00723_00973
+    - 2021.10.06.08.34.20_veh-53_01000_01070
+    - 2021.10.06.08.34.20_veh-53_01089_01868
+objective:
+  diffusion_objective:
+    _target_: nuplan_extent.planning.training.modeling.objectives.diffusion_objective.DiffusionObjective
+    _convert_: all
+    weight: 1.0
+training_metric:
+  dummy_metric:
+    _target_: nuplan_extent.planning.training.modeling.metrics.dummy_metric.DummyMetric
+    _convert_: all
+aggregated_metric:
+  dummy_aggregated_metrics:
+    _target_: nuplan_extent.planning.training.modeling.aggregated_metrics.dummy_aggregated_metrics.DummyAggregatedMetric
+    _convert_: all
+data_augmentation:
+  convert_to_float:
+    _target_: nuplan_extent.planning.training.data_augmentation.convert_to_float.ConvertFloatAugmentor
+    _convert_: all
+val_data_augmentation:
+  convert_to_float:
+    _target_: nuplan_extent.planning.training.data_augmentation.convert_to_float.ConvertFloatAugmentor
+    _convert_: all
+scenario_type_weights:
+  scenario_type_sampling_weights:
+    enable: false
+    scenario_type_weights:
+      unknown: 1.0
+  scenario_type_loss_weights:
+    unknown: 1.0
+common_cfg:
+  input_cfg:
+    input_channel_indexes:
+    - 0
+    - 1
+    - 2
+    - 3
+    - 4
+    - 5
+    - 6
+    raster_map_bev_range:
+    - -104.0
+    - -104.0
+    - 104.0
+    - 104.0
+    meshgrid:
+    - 0.5
+    - 0.5
+    target_width_wm: 416
+    target_height_wm: 416
+    target_width: 416
+    target_height: 416
+    target_pixel_size: 0.5
+    max_speed_normalizer: 24.0
+    dataset: nuplan
+    num_past_steps: 12
+    past_time_horizon: 6.0
+  output_cfg:
+    trajectory_steps: 8
+    time_horizon: 4.0
+  downstream_task: planning
+closed_loop: false
+cache:
+  cache_path: /cpfs01/shared/opendrivelab/yenaisheng/test
+  use_cache_without_dataset: true
+  force_feature_computation: true
+  cleanup_cache: false
+  cache_metadata_path: null
+  force_recompute_features: null
+  versatile_caching: false
+py_func: cache
+checkpoint: /cpfs01/shared/opendrivelab/opendrivelab_hdd/zhouyunsong/nuplan/trainval/cache_nuPlan/test_nuplan/training_world_model/2024.11.08.15.28.09/best_model/last.ckpt
+objective_aggregate_mode: sum

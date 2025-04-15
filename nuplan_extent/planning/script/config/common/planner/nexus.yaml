@@ -1,0 +1,79 @@
+_target_: nuplan_extent.planning.training.modeling.models.nexus.Nexus
+_convert_: 'all'
+
+diffuser:
+  _target_: nuplan_extent.planning.training.modeling.models.diffusion.scenediffusion.simpleDiffusion
+  _convert_: 'all'
+  pred_param: "v"
+  schedule: "shifted_cosine"
+  steps: 32
+  model:
+    _target_: nuplan_extent.planning.training.modeling.models.diffusion.models.diffusion.Nexus
+    _convert_: 'all'
+    nblocks: 4
+    hidden_dim: 256
+    scene_tensor_dim: 8 #(x,y,cosh,sinh,vx,vy,w,l)
+
+
+global_encoder:
+  _target_: nuplan_extent.planning.training.modeling.models.encoders.perciever_context_encoder.PercieverEncoder
+  _convert_: all
+  num_latents: 128
+  latent_dim: 256
+  input_dim: 7
+  num_blocks: 2
+
+
+render:
+  _target_: nuplan_extent.planning.training.modeling.models.renders.gump_render.GUMPRender
+  _convert_: 'all'
+
+postprocessor:
+  _target_: nuplan_extent.planning.training.modeling.models.post_processors.gump_naive_planner.GUMPNaivePlanner
+  _convert_: 'all'
+
+# Parameters for predicted trajectory
+future_trajectory_sampling:
+  _target_: nuplan.planning.simulation.trajectory.trajectory_sampling.TrajectorySampling
+  _convert_: 'all'
+  num_poses: ${common_cfg.output_cfg.trajectory_steps}  # number of poses in a trajectory
+  time_horizon: ${common_cfg.output_cfg.time_horizon}  # [s] time horizon of all poses
+
+# All feature builders
+feature_builders:
+
+  - _target_: nuplan_extent.planning.training.preprocessing.feature_builders.nexus_feature_builder.NexusFeatureBuilder
+    _convert_: 'all'
+    agent_features:
+      - 'VEHICLE'
+      - 'PEDESTRIAN'
+      - 'BICYCLE'
+    radius: 100.0
+    longitudinal_offset: 0.0
+    past_time_horizon: 2.0
+    past_num_steps: 4 # <- increase this if we want to predct at more that 2hz
+    future_time_horizon: 8.0
+    future_num_steps: 16 # <- increase this if we want to predct at more that 2hz
+    num_max_agents:
+      - 128 # <- VEHICLE
+      - 0 # <- PEDESTRIAN
+      - 0 # <- BICYCLE
+    map_features:
+      - LANE
+      - LANE_CONNECTOR
+      - STOP_LINE
+      - CROSSWALK
+    map_num_points_polylines: 21
+    map_dim_points_polyline: 7 # x,y, one-hot = len(map_features) + speed limit
+    map_num_max_polylines: 128
+
+
+target_builders:
+  - _target_: nuplan_extent.planning.training.preprocessing.feature_builders.ego_trajectory_with_past_target_builder.EgoTrajectoryWithPastTargetBuilder
+    _convert_: 'all'
+    future_trajectory_sampling: ${model.future_trajectory_sampling}
+
+num_paralell_scenario: 1
+
+# downstream_task: ${common_cfg.downstream_task}
+downstream_task: 'scenario_extrapolation' # 'planning'

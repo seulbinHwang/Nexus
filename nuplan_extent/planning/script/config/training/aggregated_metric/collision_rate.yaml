@@ -1,0 +1,17 @@
+collision_rate_bp:
+  _target_: nuplan_extent.planning.training.modeling.aggregated_metrics.collision_rate.CollisionMetric
+  _convert_: 'all'
+
+  name: "collision_rate_bp"
+  prediction_output_key: "behavior_pred"
+  exclude_ego: False
+  use_only_ego: False 
+
+collision_rate_gp:
+  _target_: nuplan_extent.planning.training.modeling.aggregated_metrics.collision_rate.CollisionMetric
+  _convert_: 'all'
+
+  name: "collision_rate_gp"
+  prediction_output_key: "intent_conditioned_behavior_pred"
+  exclude_ego: False
+  use_only_ego: False

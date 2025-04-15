@@ -1,0 +1,7 @@
+_target_: nuplan_extent.planning.training.data_loader.wod_splitter.WodSplitter
+_convert_: 'all'
+
+training_token_list_path: '/cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl/training_token_list.txt'
+subsample_ratio: 1
+start_index: 0
+validation_token_list_path: '/cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl/validation_token_list.txt'

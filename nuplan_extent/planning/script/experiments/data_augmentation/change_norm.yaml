@@ -1,0 +1,3 @@
+change_norm:
+  _target_: nuplan_extent.planning.training.data_augmentation.change_norm.ChangeNormAugmentor
+  _convert_: 'all'

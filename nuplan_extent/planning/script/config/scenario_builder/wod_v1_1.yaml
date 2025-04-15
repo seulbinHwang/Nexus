@@ -1,0 +1,9 @@
+_target_: nuplan_extent.planning.scenario_builder.wod_db.wod_scenario_builder_v1_1.WodScenarioBuilder
+_convert_: 'all'
+
+data_root: '/cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl'
+training_token_list_path: /cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl/training_token_list.txt
+validation_token_list_path: /cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl/validation_token_list.txt
+db_files: null
+subsample_ratio: 1
+start_index: 0

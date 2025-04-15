@@ -1,0 +1,5 @@
+_target_: nuplan_extent.planning.utils.adafactor.AdafactorSchedule
+_convert_: "all"
+
+optimizer: null
+initial_lr: ${optimizer.lr}
