@@ -57,7 +57,7 @@
 
   <img src="https://opendrivelab.github.io/Nexus/resources/nerf-2.gif" width="24%" alt="Video 2">
 
-  <img src="https://opendrivelab.github.io/Nexus/resources/nerf-3.gif" width="24%" alt="Video 3">
+  <img src="https://opendrivelab.github.io/Nexus/resources/nerf-5.gif" width="24%" alt="Video 3">
 
   <img src="https://opendrivelab.github.io/Nexus/resources/nerf-4.gif" width="24%" alt="Video 4">
 
