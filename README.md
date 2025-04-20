@@ -38,10 +38,8 @@
 
 </div>
 
-> [Yunsong Zhou](https://zhouyunsong.github.io/), Naisheng Ye, William Ljungbergh, Tianyu Li, Jiazhi Yang, Zetong Yang, Hongzi Zhu, Christoffer Petersson, and [Hongyang Li](https://lihongyang.info/)
-> - Presented by [OpenDriveLab](https://opendrivelab.com/)
+> [Yunsong Zhou](https://zhouyunsong.github.io/), Naisheng Ye, William Ljungbergh, Tianyu Li, _et al._
 > - :mailbox_with_mail: Primary contact: [Yunsong Zhou]((https://zhouyunsong-sjtu.github.io/)) ( zhouyunsong2017@gmail.com ) 
-> - [arXiv paper](https://arxiv.org/abs/2504.10485) | [Blog TODO]() | [Slides]()
 
 
 ## Highlights <a name="highlights"></a>
