@@ -5,7 +5,7 @@ SAVE_DIR=/cpfs01/shared/opendrivelab/opendrivelab_hdd/zhouyunsong/nuplan/trainva
 EXPERIMENT=caching
 JOB_NAME=wod
 
-# data cached under CACHE_DIR
+# data will be cached under CACHE_DIR
 CACHE_DIR=/cpfs01/shared/opendrivelab/yenaisheng/wod_test
 
 # specify wod path here
@@ -13,18 +13,20 @@ WOD_PATH=/cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl
 TRAINING_TOKEN_LIST_PATH=/cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl/training_token_list.txt
 VALIDATION_TOKEN_LIST_PATH=/cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl/validation_token_list.txt
 
+export NUPLAN_DEVKIT_PATH=/cpfs01/user/yenaisheng/Nexus/third_party/nuplan-devkit
 export PYTHONPATH=$PWD:$PYTHONPATH
 export PYTHONPATH=$NUPLAN_DEVKIT_PATH:$PYTHONPATH
 export OPENBLAS_NUM_THREADS=1 # This is to avoid OpenBlas creating too many threads
 export OMP_NUM_THREADS=1  # Control the number of threads per process for OpenMP
-
-export DEBUG=1
 
 # To cache only a shard of the data, set SPLIT (e.g., 1/4, 2/4,..., 4/4) and uncomment the lines below, including the '+split=$SPLIT' argument
 # SPLIT=1/4
 # CACHE_DIR="$CACHE_DIR/cache_$(echo $SPLIT | sed 's/\//_/g')"
 # echo "CURRENT SPLIT: $SPLIT"
 # echo "CACHE_DIR: $CACHE_DIR"
+
+# number of workers for caching
+NUM_WORKERS=1
 
 python nuplan_extent/planning/script/run_training.py \
     group=$SAVE_DIR \
@@ -35,7 +37,7 @@ python nuplan_extent/planning/script/run_training.py \
     +training=training_wod_nexus \
     worker=single_machine_thread_pool \
     worker.use_process_pool=true \
-    worker.max_workers=36 \
+    worker.max_workers=$NUM_WORKERS \
     scenario_builder=wod_v1_1 \
     scenario_builder.data_root=$WOD_PATH \
     scenario_builder.training_token_list_path=$TRAINING_TOKEN_LIST_PATH \

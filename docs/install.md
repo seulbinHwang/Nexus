@@ -10,6 +10,22 @@
     pip install -r requirements.txt
     ```
 
+## Install ALF
+
+To simplify installation, we directly provide a stable version of ALF here. Follow these steps to install [ALF](https://github.com/HorizonRobotics/alf):
+
+1. Navigate to the `third_party/alf` directory:
+
+    ```bash
+    cd Nexus/third_party/alf
+    ```
+
+2. Install ALF:
+
+    ```bash
+    pip install -e .
+    ```
+
 ## Install Nuplan Devkit
 
 1. Navigate to the `third_party` directory:
@@ -19,7 +35,7 @@
 
 2. Clone the Nuplan Devkit repository:
    ```bash
-   git clone https://github.com/motional/nuplan-devkit.git
+   git clone --branch feat-v1.3_gump https://github.com/HorizonRobotics/nuplan-devkit.git
    ```
 
 3. Install the Nuplan Devkit:
@@ -32,40 +48,20 @@
    ```bash
    export NUPLAN_DEVKIT_PATH=$YOUR_PATH_TO_Nexus/Nexus/third_party/nuplan-devkit
    ```
-5. install following packages:
+   
+## Install MTR
+1. Navigate to the `third_party` directory:
    ```bash
-   pip install aiofiles aioboto3 flatdict adjustText loralib easydict einops_exts
-   pip install waymo-open-dataset-tf-2-12-0==1.6.4
+   cd Nexus/third_party
    ```
 
-## Install ALF
+2. Clone the MTR repository:
+   ```bash
+   git clone https://github.com/sshaoshuai/MTR.git
+   ```
 
-Follow these steps to install ALF while ignoring the dependencies of torch:
-
-1. Navigate to the `third_party` directory:
-
-    ```bash
-    cd Nexus/third_party
-    ```
-
-2. Clone the ALF repository:
-
-    ```bash
-    git clone https://github.com/HorizonRobotics/alf.git
-    ```
-
-3. Edit the `setup.py` file to ignore the dependencies of torch:
-
-    Comment out lines 52, 53, and 54 in the `setup.py` file:
-
-    ```python
-    # 'torch==2.2.0',
-    # 'torchvision==0.17.0',
-    # 'torchtext==0.17.0',
-    ```
-
-4. Install ALF:
-
-    ```bash
-    pip install -e .
-    ```
+3. Install the MTR:
+   ```bash
+   cd MTR
+   pip install -e .
+   ```

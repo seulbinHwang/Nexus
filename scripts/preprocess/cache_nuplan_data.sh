@@ -5,15 +5,15 @@ SAVE_DIR=/cpfs01/shared/opendrivelab/opendrivelab_hdd/zhouyunsong/nuplan/trainva
 EXPERIMENT=caching
 JOB_NAME=nuplan
 
-# data cached under CACHE_DIR
+# data will be cached under CACHE_DIR
 CACHE_DIR=/cpfs01/shared/opendrivelab/yenaisheng/nuplan_test
 
-export DEBUG=True
 # specify nuplan dataset paths here
-NUPLAN_SENSOR_ROOT=/cpfs01/shared/opendrivelab/opendrivelab_hdd/nuplan/dataset/nuplan-v1.1/sensor_blobs
-NUPLAN_DATA_ROOT=/cpfs01/shared/opendrivelab/opendrivelab_hdd/nuplan/dataset/nuplan-v1.1/splits/trainval
-NUPLAN_MAPS_ROOT=/cpfs01/shared/opendrivelab/opendrivelab_hdd/nuplan/dataset/maps
+NUPLAN_SENSOR_ROOT=/nas/shared/opendrivelab/dataset/datasets/nuplan/nuplan-v1.1/sensor_blobs
+NUPLAN_DATA_ROOT=/nas/shared/opendrivelab/dataset/datasets/nuplan/nuplan-v1.1/splits/trainval
+NUPLAN_MAPS_ROOT=/nas/shared/opendrivelab/dataset/datasets/nuplan/maps
 
+export NUPLAN_DEVKIT_PATH=/cpfs01/user/yenaisheng/Nexus/third_party/nuplan-devkit
 export PYTHONPATH=$PWD:$PYTHONPATH
 export PYTHONPATH=$NUPLAN_DEVKIT_PATH:$PYTHONPATH
 export OPENBLAS_NUM_THREADS=1 # This is to avoid OpenBlas creating too many threads
@@ -24,6 +24,9 @@ export OMP_NUM_THREADS=1  # Control the number of threads per process for OpenMP
 # CACHE_DIR="$CACHE_DIR/cache_$(echo $SPLIT | sed 's/\//_/g')"
 # echo "CURRENT SPLIT: $SPLIT"
 # echo "CACHE_DIR: $CACHE_DIR"
+
+# number of workers for caching
+NUM_WORKERS=1
 
 python nuplan_extent/planning/script/run_training.py \
     group=$SAVE_DIR \
@@ -41,7 +44,7 @@ python nuplan_extent/planning/script/run_training.py \
     scenario_builder.scenario_mapping.subsample_ratio_override=0.5 \
     worker=single_machine_thread_pool \
     worker.use_process_pool=true \
-    worker.max_workers=36 \
+    worker.max_workers=$NUM_WORKERS \
     model=nexus \
     scenario_filter.timestamp_threshold_s=15 \
     scenario_filter.expand_scenarios=false \

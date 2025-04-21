@@ -388,7 +388,7 @@ class WaymoVectorFeatureBuilderV2(AbstractFeatureBuilder,
                                                        num_max_agents)
 
                     local_coords_agent_states = convert_absolute_quantities_to_relative(
-                        agent_history, anchor_ego_state[:WaymoEgoInternalIndex.width()], position_only=True) # pass the validation
+                        agent_history, anchor_ego_state[:WaymoEgoInternalIndex.width()]) # pass the validation
 
                     agents_tensor[..., :WaymoAgentInternalIndex.z()] = pack_agents_tensor_withindex(
                         local_coords_agent_states)

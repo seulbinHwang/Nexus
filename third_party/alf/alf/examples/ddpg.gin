@@ -1,0 +1,11 @@
+# WARNING: In general, alf.config is preferred over gin config, but in this case, alf.config isn't available for SocialRobot.
+# her_target_navigation_states.gin depends on ddpg.gin.
+
+# default ddpg config
+
+import alf
+import alf.algorithms.ddpg_algorithm
+
+TrainerConfig.whole_replay_buffer_training=False
+TrainerConfig.clear_replay_buffer=False
+TrainerConfig.algorithm_ctor=@DdpgAlgorithm

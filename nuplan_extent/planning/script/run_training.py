@@ -8,7 +8,6 @@ import hydra
 import pytorch_lightning as pl
 import torch
 import torch.multiprocessing
-from pytorch_lightning.utilities.seed import seed_everything
 from nuplan.planning.script.builders.folder_builder import (
     build_training_experiment_folder,
 )
@@ -32,8 +31,6 @@ from nuplan.planning.utils.multithreading.worker_pool import WorkerPool
 from omegaconf import DictConfig, OmegaConf
 from pytorch_lightning.loggers.wandb import WandbLogger
 
-# set seeds for all random number generators
-seed_everything(0)
 
 cv2.setNumThreads(1)
 warnings.filterwarnings("ignore")
@@ -90,9 +87,6 @@ def main(cfg: DictConfig) -> Optional[TrainingEngine]:
     :param cfg: omegaconf dictionary
     """
 
-    # Fix random seed
-    pl.seed_everything(cfg.seed, workers=True)
-
     # Configure logger
     build_logger(cfg)
 
@@ -104,12 +98,6 @@ def main(cfg: DictConfig) -> Optional[TrainingEngine]:
 
     # Build worker
     worker = build_worker(cfg)
-
-    # save the cfg
-    # with open('/cpfs01/user/yenaisheng/SceneGen/nuplan_extent/planning/script/config/cfg_wod_train.yaml', 'w') as f:
-    #     OmegaConf.save(cfg, f)
-    # print('cfg saved at /cpfs01/user/yenaisheng/SceneGen/nuplan_extent/planning/script/config/cfg_wod_train.yaml')
-    # return 
 
     # Build plugins (compatible with mmdet)
     if hasattr(cfg, "plugin") and cfg.plugin:
@@ -124,23 +112,22 @@ def main(cfg: DictConfig) -> Optional[TrainingEngine]:
             plg_lib = importlib.import_module(_module_path)
 
     if cfg.py_func == "train":
-        torch.autograd.set_detect_anomaly(True)
         # Build training engine
         engine = build_custom_training_engine(cfg, worker)
-
+        # import pdb; pdb.set_trace()
         # Run training
         logger.info("Starting training...")
         # OmegaConf.save(cfg, os.path.join(cfg.output_dir, "config.yaml"))
-
-        if os.environ.get("USE_WANDB", 'False').lower() == 'true':
+        if os.environ.get("USE_WANDB", 'true').lower() == 'true':
             # check if wandb is enabled
             if int(os.environ.get("LOCAL_RANK", 0)) == 0:
                 training_logger = WandbLogger(
-                    save_dir=os.environ.get("WANDB_DIR", "/cpfs01/user/yenaisheng/SceneGen/wandb"),
-                    project=os.environ.get("WANDB_PROJECT", "nexus"),
-                    name=os.environ.get("WANDB_EXP_NAME", cfg.experiment_uid),
-                    entity=os.environ.get("WANDB_ENTITY", "opendrivelab"),
+                    save_dir=os.environ.get("WANDB_DIR", "wandb/"),
+                    project=os.environ.get("WANDB_PROJECT", "your_project_name"),
+                    name=os.environ.get("WANDB_EXP_NAME", "your_experiment_name"),
+                    entity=os.environ.get("WANDB_ENTITY", "your_wandb_entity"),
                     log_model=False,
+                    offline=os.environ.get("WANDB_OFFLINE", 'false').lower() == 'true',
                 )
 
                 engine.trainer.logger = training_logger
@@ -169,15 +156,16 @@ def main(cfg: DictConfig) -> Optional[TrainingEngine]:
         logger.info("Starting distill...")
         # OmegaConf.save(cfg, os.path.join(cfg.output_dir, "config.yaml"))
 
-        if os.environ.get("USE_WANDB", 'False').lower() == 'true':
+        if os.environ.get("USE_WANDB", 'true').lower() == 'true':
             # check if wandb is enabled
             if int(os.environ.get("LOCAL_RANK", 0)) == 0:
                 training_logger = WandbLogger(
-                    save_dir=os.environ.get("WANDB_DIR", "/cpfs01/user/yenaisheng/SceneGen/wandb"),
-                    project=os.environ.get("WANDB_PROJECT", "scene-diffusion"),
-                    name=os.environ.get("WANDB_EXP_NAME", cfg.experiment_uid),
-                    entity=os.environ.get("WANDB_ENTITY", "opendrivelab"),
+                    save_dir=os.environ.get("WANDB_DIR", "wandb/"),
+                    project=os.environ.get("WANDB_PROJECT", "your_project_name"),
+                    name=os.environ.get("WANDB_EXP_NAME", "your_experiment_name"),
+                    entity=os.environ.get("WANDB_ENTITY", "your_wandb_entity"),
                     log_model=False,
+                    offline=os.environ.get("WANDB_OFFLINE", 'false').lower() == 'true',
                 )
 
                 engine.trainer.logger = training_logger
@@ -219,15 +207,16 @@ def main(cfg: DictConfig) -> Optional[TrainingEngine]:
         my_ckpt = torch.load(my_ckpt_path, map_location="cpu")
         engine.model.load_state_dict(my_ckpt["state_dict"])
 
-        if os.environ.get("USE_WANDB", 'False').lower() == 'true':
+        if os.environ.get("USE_WANDB", 'true').lower() == 'true':
             # check if wandb is enabled
             if int(os.environ.get("LOCAL_RANK", 0)) == 0:
                 training_logger = WandbLogger(
-                    save_dir=os.environ.get("WANDB_DIR", "/path/to/your/local/wandb/dir"),
+                    save_dir=os.environ.get("WANDB_DIR", "wandb/"),
                     project=os.environ.get("WANDB_PROJECT", "your_project_name"),
-                    name=os.environ.get("WANDB_EXP_NAME", cfg.experiment_uid),
+                    name=os.environ.get("WANDB_EXP_NAME", "your_experiment_name"),
                     entity=os.environ.get("WANDB_ENTITY", "your_wandb_entity"),
                     log_model=False,
+                    offline=os.environ.get("WANDB_OFFLINE", 'false').lower() == 'true',
                 )
 
                 engine.trainer.logger = training_logger

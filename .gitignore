@@ -1,0 +1,7 @@
+third_party/MTR
+third_party/nuplan-devkit
+third_party/CAT
+*.log
+*.pyc
+__pycache__/
+*.gif

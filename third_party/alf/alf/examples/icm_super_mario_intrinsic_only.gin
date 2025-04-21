@@ -1,0 +1,8 @@
+# icm on SuperMario with only intrinsic reward
+
+# include configurations from  file `icm_super_mario.gin`
+include 'icm_super_mario.gin'
+
+# use only intrinsic reward for training policy
+Agent.extrinsic_reward_coef=0.0
+Agent.intrinsic_reward_coef=1.0

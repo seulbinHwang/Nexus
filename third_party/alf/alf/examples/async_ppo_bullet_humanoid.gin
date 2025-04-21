@@ -1,0 +1,61 @@
+# Warning: Directly converted from the TF version, this gin file was NOT TESTED.
+
+include 'ppo.gin'
+
+# environment config
+
+# baseline ppo2 training command:
+# CUDA_VISIBLE_DEVICES=0 OPENAI_LOGDIR=/home/weixu/tmp/bullet_humanoid_baseline/ppo-0 OPENAI_LOG_FORMAT='stdout,tensorboard' python -m baselines.run --alg=ppo2 --env=HumanoidBulletEnv-v0 --network=mlp --num_timesteps=1e8 --ent_coef=0.01 --num_hidden=32 --num_layers=3 --value_network=copy
+
+# need to `pip install pybullet`
+import pybullet_envs
+create_environment.env_name="HumanoidBulletEnv-v0"
+create_environment.num_parallel_environments=96
+
+# algorithm config
+Agent.gradient_clipping=0.5
+Agent.clip_by_global_norm=True
+
+PPOLoss.entropy_regularization=1e-2
+PPOLoss.gamma=0.99
+PPOLoss.normalize_advantages=True
+PPOLoss.td_lambda=0.95
+PPOLoss.td_error_loss_fn=@element_wise_squared_loss
+
+actor/ActorDistributionNetwork.fc_layer_params=(32, 32, 32)
+actor/ActorDistributionNetwork.activation_fn=@torch.tanh
+actor/ActorDistributionNetwork.continuous_projection_net=@NormalProjectionNetwork
+NormalProjectionNetwork.init_means_output_factor=1e-10
+NormalProjectionNetwork.std_bias_initializer_value=0.0
+NormalProjectionNetwork.std_transform=@torch.exp
+
+value/ValueNetwork.fc_layer_params=(32, 32, 32)
+value/ValueNetwork.activation_fn=@torch.tanh
+
+ac/Adam.learning_rate=3e-3
+
+ActorCriticAlgorithm.actor_network=@actor/ActorDistributionNetwork()
+ActorCriticAlgorithm.value_network=@value/ValueNetwork()
+Agent.optimizer=@ac/Adam()
+
+# driver config
+N = 2
+AsyncOffPolicyDriver.num_actor_queues = %N
+AsyncOffPolicyDriver.actor_queue_cap = 1
+AsyncOffPolicyDriver.learn_queue_cap = 1
+
+# training config
+TrainerConfig.trainer=@async_off_policy_trainer
+TrainerConfig.num_updates_per_train_iter = 20
+TrainerConfig.unroll_length = 512
+TrainerConfig.num_envs = %N
+TrainerConfig.mini_batch_length = 1
+TrainerConfig.mini_batch_size = 4096
+TrainerConfig.num_iterations = 100000
+TrainerConfig.evaluate=True
+TrainerConfig.eval_interval = 100
+TrainerConfig.debug_summaries=True
+TrainerConfig.summarize_grads_and_vars = True
+TrainerConfig.summary_interval = 11 # a prime num for showing all actors
+
+

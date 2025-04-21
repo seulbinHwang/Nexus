@@ -1,0 +1,31 @@
+absl-py==2.1.0
+atari_py==0.2.9
+box2d-py
+cpplint
+clang-format==9.0
+fasteners==0.19
+gin-config@ git+https://github.com/HorizonRobotics/gin-config.git
+gym==0.15.4
+gym3==0.3.3
+h5py==3.10.0
+matplotlib==3.8.2
+numpy==1.26
+opencv-python==4.9.0.80
+pathos==0.2.4
+pillow>=8
+protobuf==3.20.2
+psutil==5.9.8
+pybullet==2.5.0
+pyglet==1.3.2
+rectangle-packer==2.0.2
+sphinx==3.0
+sphinx-autobuild
+sphinx-autodoc-typehints@ git+https://github.com/hnyu/sphinx-autodoc-typehints.git
+sphinxcontrib-napoleon==0.7
+sphinx-rtd-theme==0.4.3
+tensorboard==2.15.2
+threadpoolctl==3.2.0
+cnest
+
+[metadrive]
+metadrive-simulator==0.2.5.1

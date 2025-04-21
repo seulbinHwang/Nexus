@@ -60,8 +60,9 @@ To evaluate on the Waymo Sim Agents Benchmark, follow these steps:
     ```bash
     python ./scripts/testing/offline_sim_agents.py --pkl_dir ${YOUR_PKL_DUMP_PATH} --nprocess 32 --output_dir ${OUTPUT_DIR}
     ```
+3. Please check ./scripts/testing/offline_sim_agents.py for more details about online submission
 
-### Metrics(e.g. FDE, ADE, ...) Evaluation
+### Nuplan Metrics(e.g. FDE, ADE, ...) Evaluation
 To evaluate specific metrics like FDE, ADE, Collision rate, etc., run the following command:
    ```bash
    sh ./scripts/testing/test_nexus_metrics.sh
@@ -82,3 +83,6 @@ We provided the following CKPT:
 |---------------|---------|---------------------------------------------------------------------------------------------|
 | Nexus-nuplan     | NuPlan  |   [Google Cloud](https://storage.googleapis.com/93935945854-us-central1-blueprint-config/epoch_llama_sm.ckpt)                                                                  
 | Nexus-wod  | Waymo Motion dataset  | [Google Cloud](https://storage.googleapis.com/93935945854-us-central1-blueprint-config/epoch_llama_sm.ckpt) |
+
+## Nexus-data
+To enhance the model's ability to handle safety-critical scenarios such as cut-ins, rear-end collisions, and others, we constructed a dedicated safety-critical dataset named Nexus-data. This dataset follows the same format as the Nexus cached dataset. We have made it publicly available, and you can access it on [Hugging Face](xxxx.com). More details about the dataset can be found in the Nexus paper.

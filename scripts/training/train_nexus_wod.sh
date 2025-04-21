@@ -16,12 +16,12 @@ NUM_ACCUM_BATCHES=$((1024 / BATCH_SIZE_PER_GPU / NUM_GPUS))
 NUM_WORKERS=$((BATCH_SIZE * NUM_GPUS))
 NUM_WORKERS=12
 
+export NUPLAN_DEVKIT_PATH=/cpfs01/user/yenaisheng/Nexus/third_party/nuplan-devkit
 export PYTHONPATH=$PWD:$PYTHONPATH
 export PYTHONPATH=$NUPLAN_DEVKIT_PATH:$PYTHONPATH
 export OPENBLAS_NUM_THREADS=1 # This is to avoid OpenBlas creating too many threads
 export OMP_NUM_THREADS=1  # Control the number of threads per process for OpenMP
 
-export USE_WANDB=False # True
 export WANDB_PROJECT="scenegen_wod"
 export WANDB_EXP_NAME="waymo_3loss"
 export WANDB_ENTITY="opendrivelab"
@@ -42,7 +42,7 @@ python -W ignore $PWD/nuplan_extent/planning/script/run_training.py \
     scenario_builder.validation_token_list_path=$VALIDATION_TOKEN_LIST_PATH \
     scenario_builder.subsample_ratio=1 \
     scenario_builder.start_index=0 \
-    lightning.trainer.params.fast_dev_run=false\
+    lightning.trainer.params.fast_dev_run=true\
     lightning.trainer.params.num_sanity_val_steps=0 \
     lightning.trainer.params.check_val_every_n_epoch=1 \
     lightning.trainer.params.max_epochs=350 \

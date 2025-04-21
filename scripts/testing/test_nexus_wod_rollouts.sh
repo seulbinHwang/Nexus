@@ -6,8 +6,7 @@ JOB_NAME="train_test"
 # waymo motion dataset cache path
 CACHE_META_PATH=/cpfs01/shared/opendrivelab/yenaisheng/cache_waymo/trainval/metadata/trainval_metadata_node_0.csv
 CACHE_DIR="/cpfs01/shared/opendrivelab/yenaisheng/cache_waymo"
-CACHE_META_PATH=/cpfs01/shared/opendrivelab/yenaisheng/wod_test_keep/metadata/test.csv
-CACHE_DIR=/cpfs01/shared/opendrivelab/yenaisheng/wod_test_keep
+
 NUM_GPUS=8
 BATCH_SIZE_PER_GPU=4
 NUM_ACCUM_BATCHES=$((1024 / BATCH_SIZE_PER_GPU / NUM_GPUS))
@@ -17,15 +16,15 @@ NUM_WORKERS=$((BATCH_SIZE * NUM_GPUS))
 WOD_PATH=/cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl
 # set the token_list.txt path (validation_token_list or test_token_list) here to evaluate the model 
 # later offline simulation only works for validation_token_list (as we only have gt future trajectories for validation set)
-EVAL_TOKEN_LIST_PATH=/cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl/testing_token_list.txt
+EVAL_TOKEN_LIST_PATH=/cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl/validation_token_list.txt
 
+export NUPLAN_DEVKIT_PATH=/cpfs01/user/yenaisheng/Nexus/third_party/nuplan-devkit
 export PYTHONPATH=$PWD:$PYTHONPATH
 export PYTHONPATH=$NUPLAN_DEVKIT_PATH:$PYTHONPATH
 export OPENBLAS_NUM_THREADS=1 # This is to avoid OpenBlas creating too many threads
 export OMP_NUM_THREADS=1  # Control the number of threads per process for OpenMP
 
-export USE_WANDB=False # False
-export WANDB_PROJECT="scenegen_project"
+export WANDB_PROJECT="nexus"
 export WANDB_EXP_NAME="waymo_val"
 export WANDB_ENTITY="opendrivelab"
 
@@ -74,7 +73,7 @@ python -W ignore $PWD/nuplan_extent/planning/script/run_training.py \
     model=nexus_wod \
     +model.diffuser.constrain_mode=[] \
     +model.diffuser.constrain_gamma=1.0 \
-    model.downstream_task=sim_agents_test \
+    model.downstream_task=sim_agents_val \
     optimizer.lr=0.0002 \
     optimizer.weight_decay=0.0 \
     lr_scheduler=multistep_lr \

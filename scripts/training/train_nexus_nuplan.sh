@@ -6,9 +6,10 @@ JOB_NAME="nuplan"
 CACHE_DIR=/nas/shared/opendrivelab/zhouyunsong/nuplan/trainval/cache_tokenized_log
 CACHE_META_PATH=/nas/shared/opendrivelab/zhouyunsong/nuplan/trainval/cache_tokenized_log/metadata/cache_tokenized_log_metadata_node_0.csv
 
-export NUPLAN_SENSOR_ROOT=/cpfs01/shared/opendrivelab/datasets/nuplan/dataset/nuplan-v1.1/sensor_blobs
-export NUPLAN_DATA_ROOT=/cpfs01/shared/opendrivelab/datasets/nuplan/dataset/nuplan-v1.1/splits/trainval
-export NUPLAN_MAPS_ROOT=/cpfs01/shared/opendrivelab/datasets/nuplan/dataset/maps
+export NUPLAN_DEVKIT_PATH=/cpfs01/user/yenaisheng/Nexus/third_party/nuplan-devkit
+export NUPLAN_SENSOR_ROOT=/nas/shared/opendrivelab/dataset/datasets/nuplan/nuplan-v1.1/sensor_blobs
+export NUPLAN_DATA_ROOT=/nas/shared/opendrivelab/dataset/datasets/nuplan/nuplan-v1.1/splits/trainval
+export NUPLAN_MAPS_ROOT=/nas/shared/opendrivelab/dataset/datasets/nuplan/maps
 
 NUM_GPUS=8
 BATCH_SIZE_PER_GPU=64
@@ -19,7 +20,6 @@ NUM_WORKERS=12
 export PYTHONPATH=$PWD:$PYTHONPATH
 export PYTHONPATH=$NUPLAN_DEVKIT_PATH:$PYTHONPATH
 
-export USE_WANDB=False # True False
 export WANDB_PROJECT="scenegen_wod"
 export WANDB_EXP_NAME="nuplan_wophytime"
 export WANDB_ENTITY="opendrivelab"

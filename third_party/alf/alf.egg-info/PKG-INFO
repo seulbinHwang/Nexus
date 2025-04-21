@@ -1,0 +1,44 @@
+Metadata-Version: 2.4
+Name: alf
+Version: 0.1.0
+Summary: UNKNOWN
+License: UNKNOWN
+Platform: UNKNOWN
+Requires-Python: >=3.8.0
+License-File: LICENSE
+Requires-Dist: absl-py==2.1.0
+Requires-Dist: atari_py==0.2.9
+Requires-Dist: box2d-py
+Requires-Dist: cpplint
+Requires-Dist: clang-format==9.0
+Requires-Dist: fasteners==0.19
+Requires-Dist: gin-config@ git+https://github.com/HorizonRobotics/gin-config.git
+Requires-Dist: gym==0.15.4
+Requires-Dist: gym3==0.3.3
+Requires-Dist: h5py==3.10.0
+Requires-Dist: matplotlib==3.8.2
+Requires-Dist: numpy==1.26
+Requires-Dist: opencv-python==4.9.0.80
+Requires-Dist: pathos==0.2.4
+Requires-Dist: pillow>=8
+Requires-Dist: protobuf==3.20.2
+Requires-Dist: psutil==5.9.8
+Requires-Dist: pybullet==2.5.0
+Requires-Dist: pyglet==1.3.2
+Requires-Dist: rectangle-packer==2.0.2
+Requires-Dist: sphinx==3.0
+Requires-Dist: sphinx-autobuild
+Requires-Dist: sphinx-autodoc-typehints@ git+https://github.com/hnyu/sphinx-autodoc-typehints.git
+Requires-Dist: sphinxcontrib-napoleon==0.7
+Requires-Dist: sphinx-rtd-theme==0.4.3
+Requires-Dist: tensorboard==2.15.2
+Requires-Dist: threadpoolctl==3.2.0
+Requires-Dist: cnest
+Provides-Extra: metadrive
+Requires-Dist: metadrive-simulator==0.2.5.1; extra == "metadrive"
+Dynamic: license-file
+Dynamic: provides-extra
+Dynamic: requires-dist
+Dynamic: requires-python
+
+UNKNOWN

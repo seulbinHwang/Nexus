@@ -27,4 +27,4 @@ defaults:
   - override /callbacks:
     - learning_rate_monitor_callback
     - model_checkpoint_callback
-    # - visualization_nexus_callback
+    - visualization_nexus_callback

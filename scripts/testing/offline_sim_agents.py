@@ -484,7 +484,8 @@ def main():
     offline_simulation = True # True for offline simulation, False for online submission
     
     if offline_simulation:
-        # the following lines are used for offline simulation (only work for evaluation set as we have access to the ground truth in this case)
+        # the following lines are used for offline simulation 
+        # please note that this only works for evaluation set as we have access to the ground truth in only this case
         pkl_dir = args.pkl_dir
         output_dir = args.output_dir
         nprocess = args.nprocess
@@ -492,7 +493,8 @@ def main():
         metric.compute(pkl_dir, output_dir, nprocess)
     
     else:
-        # the following lines are used for online submission and simulation (works for both evaluation and testing set)
+        # the following lines are used for online submission and simulation 
+        # this works for both evaluation and testing set, but packaging and submitting to offical website can be time-consuming.
         pkl_dir = args.pkl_dir
         output_dir = args.output_dir
         nprocess = args.nprocess

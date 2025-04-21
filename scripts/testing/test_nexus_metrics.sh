@@ -6,9 +6,10 @@ JOB_NAME="train_test"
 CACHE_DIR=/nas/shared/opendrivelab/zhouyunsong/nuplan/trainval/cache_tokenized_log
 CACHE_META_PATH=/nas/shared/opendrivelab/zhouyunsong/nuplan/trainval/cache_tokenized_log/metadata/cache_tokenized_log_metadata_node_0.csv
 
-export NUPLAN_SENSOR_ROOT=/cpfs01/shared/opendrivelab/datasets/nuplan/dataset/nuplan-v1.1/sensor_blobs
-export NUPLAN_DATA_ROOT=/cpfs01/shared/opendrivelab/datasets/nuplan/dataset/nuplan-v1.1/splits/trainval
-export NUPLAN_MAPS_ROOT=/cpfs01/shared/opendrivelab/datasets/nuplan/dataset/maps
+export NUPLAN_DEVKIT_PATH=/cpfs01/user/yenaisheng/Nexus/third_party/nuplan-devkit
+export NUPLAN_SENSOR_ROOT=/nas/shared/opendrivelab/dataset/datasets/nuplan/nuplan-v1.1/sensor_blobs
+export NUPLAN_DATA_ROOT=/nas/shared/opendrivelab/dataset/datasets/nuplan/nuplan-v1.1/splits/trainval
+export NUPLAN_MAPS_ROOT=/nas/shared/opendrivelab/dataset/datasets/nuplan/maps
 
 NUM_GPUS=8
 BATCH_SIZE_PER_GPU=64
@@ -19,8 +20,7 @@ NUM_WORKERS=12
 export PYTHONPATH=$PWD:$PYTHONPATH
 export PYTHONPATH=$NUPLAN_DEVKIT_PATH:$PYTHONPATH
 
-export USE_WANDB=False # False
-export WANDB_PROJECT="offline_rate"
+export WANDB_PROJECT="nexus"
 export WANDB_EXP_NAME="constrain"
 export WANDB_ENTITY="opendrivelab"
 
@@ -48,6 +48,7 @@ python -W ignore $PWD/nuplan_extent/planning/script/run_training.py \
     cache.use_cache_without_dataset=true \
     cache.versatile_caching=false \
     experiment_name=$EXPERIMENT \
+    job_name=$JOB_NAME \
     py_func=train \
     seed=0 \
     +training=testing_nuplan_nexus \
@@ -58,7 +59,7 @@ python -W ignore $PWD/nuplan_extent/planning/script/run_training.py \
     lightning.trainer.params.max_epochs=350 \
     lightning.trainer.params.max_time=14:32:00:00\
     lightning.trainer.params.gradient_clip_val=1.0 \
-    lightning.trainer.params.strategy=ddp \
+    lightning.trainer.params.strategy=ddp_find_unused_parameters_true \
     lightning.trainer.params.detect_anomaly=false \
     lightning.trainer.params.log_every_n_steps=10\
     lightning.trainer.checkpoint.monitor=loss/train_loss \
@@ -73,7 +74,7 @@ python -W ignore $PWD/nuplan_extent/planning/script/run_training.py \
     model=nexus \
     +model.diffuser.constrain_mode=['map','sma','clip'] \
     +model.diffuser.constrain_gamma=[1.0,1.0,1.0] \
-    +model.diffuser.scheduling_matrix=trapezoid \
+    +model.diffuser.scheduling_matrix=full_sequence \
     optimizer=adamw \
     optimizer.lr=1e-3 \
     optimizer.weight_decay=0.01 \

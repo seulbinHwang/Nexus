@@ -180,7 +180,7 @@ class Nexus(TorchModuleWrapper):
         # inpainting here
         scene_tensor_features: SceneTensor = tmp_feature_dict["scene_tensor"]
         global_context = self.global_encoder(scene_tensor_features)
-        # import pdb;pdb.set_trace()
+
         if 'test' in self._downstream_task:
             # all valid tokens in scene_tensor should be kept in test time
             # keep_mask = scene_tensor_features.validity.unsqueeze(-1).expand(-1, -1, -1, scene_tensor_features.tensor.shape[-1])
