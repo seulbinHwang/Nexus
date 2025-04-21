@@ -5,3 +5,4 @@ third_party/CAT
 *.pyc
 __pycache__/
 *.gif
+.efc*
