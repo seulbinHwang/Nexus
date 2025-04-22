@@ -28,7 +28,7 @@ export WANDB_PROJECT="nexus"
 export WANDB_EXP_NAME="waymo_val"
 export WANDB_ENTITY="opendrivelab"
 
-CHECKPOINT=/nas/shared/opendrivelab/zhouyunsong/nuplan/trainval/cache_nuPlan/training_world_model/training_world_model/2025.02.27.23.58.37/best_model/last.ckpt
+CHECKPOINT=/nas/shared/opendrivelab/zhouyunsong/nuplan/trainval/cache_nuPlan/training_world_model/training_world_model/2025.02.27.23.58.37/best_model/wod.ckpt
 
 # inference results which constain the 32 future trajectories for each sample will be saved under PKL_PATH, you can then run `./offline_sim_agents.py` to offline evaluate the results
 PKL_PATH=/cpfs01/user/yenaisheng/test

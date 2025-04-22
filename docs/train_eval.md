@@ -81,8 +81,7 @@ We provide several checkpoints for model reproduction. To use a checkpoint, down
 We provided the following CKPT:
 | Model         | Dataset | Checkpoint                                                                                  |
 |---------------|---------|---------------------------------------------------------------------------------------------|
-| Nexus-nuplan     | NuPlan  |   [Google Cloud](https://storage.googleapis.com/93935945854-us-central1-blueprint-config/epoch_llama_sm.ckpt)                                                                  
-| Nexus-wod  | Waymo Motion dataset  | [Google Cloud](https://storage.googleapis.com/93935945854-us-central1-blueprint-config/epoch_llama_sm.ckpt) |
+| Nexus-nuplan     | NuPlan  |   [Hugging Face](https://huggingface.co/OpenDriveLab-org/Nexus/blob/main/nuplan.ckpt)                                                                  
+| Nexus-wod  | Waymo Motion dataset  | [Hugging Face](https://huggingface.co/OpenDriveLab-org/Nexus/blob/main/wod.ckpt) |
 
-## Nexus-data
-To enhance the model's ability to handle safety-critical scenarios such as cut-ins, rear-end collisions, and others, we constructed a dedicated safety-critical dataset named Nexus-data. This dataset follows the same format as the Nexus cached dataset. We have made it publicly available, and you can access it on [Hugging Face](xxxx.com). More details about the dataset can be found in the Nexus paper.
+
