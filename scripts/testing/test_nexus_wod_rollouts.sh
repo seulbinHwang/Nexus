@@ -1,50 +1,58 @@
-#! /usr/bin/env bash
-SAVE_DIR="/cpfs01/user/yenaisheng/SceneGen/logs"
-EXPERIMENT="caching"
-JOB_NAME="train_test"
+#!/usr/bin/env bash
 
-# waymo motion dataset cache path
-CACHE_META_PATH=/cpfs01/shared/opendrivelab/yenaisheng/cache_waymo/trainval/metadata/trainval_metadata_node_0.csv
-CACHE_DIR="/cpfs01/shared/opendrivelab/yenaisheng/cache_waymo"
+# ========== Logging & Experiment Settings ==========
+SAVE_DIR="YOUR_SAVE_DIR"                    # Where logs and checkpoints will be saved
+EXPERIMENT="YOUR_EXPERIMENT_NAME"           # Experiment name
+JOB_NAME="YOUR_JOB_NAME"                    # Job name used for logging/checkpoints
 
-NUM_GPUS=8
-BATCH_SIZE_PER_GPU=4
+# ========== Waymo Motion Dataset Cache ==========
+CACHE_META_PATH="YOUR_CACHE_META_PATH"      # Path to metadata CSV
+CACHE_DIR="YOUR_CACHE_DIR"                  # Path to cached data
+
+# ========== Training Configuration ==========
+NUM_GPUS=YOUR_NUM_GPUS
+BATCH_SIZE_PER_GPU=YOUR_BATCH_SIZE
 NUM_ACCUM_BATCHES=$((1024 / BATCH_SIZE_PER_GPU / NUM_GPUS))
-NUM_WORKERS=$((BATCH_SIZE * NUM_GPUS))
+NUM_WORKERS=$((BATCH_SIZE * NUM_GPUS))      # Adjust based on hardware
 
+# ========== Waymo Data Path ==========
+WOD_PATH="YOUR_WAYMO_SCENARIO_PATH"         # Path to Waymo .pkl scenario files
 
-WOD_PATH=/cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl
-# set the token_list.txt path (validation_token_list or test_token_list) here to evaluate the model 
-# later offline simulation only works for validation_token_list (as we only have gt future trajectories for validation set)
-EVAL_TOKEN_LIST_PATH=/cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl/validation_token_list.txt
+# ========== Evaluation Token List ==========
+EVAL_TOKEN_LIST_PATH="YOUR_EVAL_TOKEN_LIST_PATH"  # Validation or test token list
 
-export NUPLAN_DEVKIT_PATH=/cpfs01/user/yenaisheng/Nexus/third_party/nuplan-devkit
+# ========== Environment Variables ==========
+export NUPLAN_DEVKIT_PATH="YOUR_NUPLAN_DEVKIT_PATH"    # nuplan-devkit path
 export PYTHONPATH=$PWD:$PYTHONPATH
 export PYTHONPATH=$NUPLAN_DEVKIT_PATH:$PYTHONPATH
-export OPENBLAS_NUM_THREADS=1 # This is to avoid OpenBlas creating too many threads
-export OMP_NUM_THREADS=1  # Control the number of threads per process for OpenMP
+export OPENBLAS_NUM_THREADS=1       # Avoid OpenBLAS thread explosion
+export OMP_NUM_THREADS=1            # Control OpenMP threads
 
-export WANDB_PROJECT="nexus"
-export WANDB_EXP_NAME="waymo_val"
-export WANDB_ENTITY="opendrivelab"
+# ========== Weights & Biases ==========
+export WANDB_PROJECT="YOUR_WANDB_PROJECT"
+export WANDB_EXP_NAME="YOUR_WANDB_EXP_NAME"
+export WANDB_ENTITY="YOUR_WANDB_ENTITY"
 
-CHECKPOINT=/nas/shared/opendrivelab/zhouyunsong/nuplan/trainval/cache_nuPlan/training_world_model/training_world_model/2025.02.27.23.58.37/best_model/wod.ckpt
+# ========== Model Checkpoint ==========
+CHECKPOINT="YOUR_MODEL_CHECKPOINT_PATH"     # Path to trained model checkpoint
 
-# inference results which constain the 32 future trajectories for each sample will be saved under PKL_PATH, you can then run `./offline_sim_agents.py` to offline evaluate the results
-PKL_PATH=/cpfs01/user/yenaisheng/test
+# ========== Output Path ==========
+PKL_PATH="YOUR_OUTPUT_PKL_SAVE_PATH"        # Where inference results will be stored
 
-# choose different constrain modes from :keep, clip, velocity, sma, collision, map (please refer to the nexus paper for more details)
-# you can also set the force for each constrain mode in range of [0,1]
-# example usage: model.diffuser.constrain_mode=[keep,clip] model.diffuser.constrain_gamma=[0.5,0.5] (or model.diffuser.constrain_gamma=0.5 for short)
-# model will execute all constrains in the order of the constrain_mode list with the corresponding force 
+# ========== Constrain Mode Settings ==========
+# Choose different constrain modes from: keep, clip, velocity, sma, collision, map (please refer to the nexus paper for more details)
+# You can also set the force for each constrain mode in the range of [0,1]
+# Example usage: model.diffuser.constrain_mode=[keep,clip], model.diffuser.constrain_gamma=[0.5,0.5] (or model.diffuser.constrain_gamma=0.5 for short)
+# The model will execute all constraints in the order of the constrain_mode list with the corresponding force 
 
-# choose different scheduling_matrix from: pyramid, full_sequence, half_half_sequence, autoregressive, trapezoid (please refer to the nexus paper for more details)
-# full_sequence will be used as default if you do not specify the scheduling_matrix
-# example usage: model.diffuser.scheduling_matrix=pyramid
+# ========== Scheduling Matrix ==========
+# Choose different scheduling_matrix from: pyramid, full_sequence, half_half_sequence, autoregressive, trapezoid (please refer to the nexus paper for more details)
+# Full_sequence will be used as default if you do not specify the scheduling_matrix
+# Example usage: model.diffuser.scheduling_matrix=pyramid
 
-# choose which split of waymo motion dataset to evaluate (val or test)
-# example usage: model.downstream_task=sim_agent_val for validation split, model.downstream_task=sim_agent_test for test split
-
+# ========== Waymo Motion Dataset Split ==========
+# Choose which split of Waymo Motion dataset to evaluate (val or test)
+# Example usage: model.downstream_task=sim_agent_val for validation split, model.downstream_task=sim_agent_test for test split
 
 python -W ignore $PWD/nuplan_extent/planning/script/run_training.py \
     group=$SAVE_DIR \

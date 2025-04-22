@@ -1,28 +1,35 @@
-#! /usr/bin/env bash
-SAVE_DIR="/cpfs01/user/yenaisheng/SceneGen/logs"
-EXPERIMENT="train"
-JOB_NAME="nuplan"
+#!/usr/bin/env bash
 
-CACHE_DIR=/nas/shared/opendrivelab/zhouyunsong/nuplan/trainval/cache_tokenized_log
-CACHE_META_PATH=/nas/shared/opendrivelab/zhouyunsong/nuplan/trainval/cache_tokenized_log/metadata/cache_tokenized_log_metadata_node_0.csv
+# ========== Logging & Experiment Settings ==========
+SAVE_DIR="YOUR_SAVE_DIR"                    # Where logs and checkpoints will be saved
+EXPERIMENT="YOUR_EXPERIMENT_NAME"           # Experiment name
+JOB_NAME="YOUR_JOB_NAME"                    # Job name used for logging/checkpoints
 
-export NUPLAN_DEVKIT_PATH=/cpfs01/user/yenaisheng/Nexus/third_party/nuplan-devkit
-export NUPLAN_SENSOR_ROOT=/nas/shared/opendrivelab/dataset/datasets/nuplan/nuplan-v1.1/sensor_blobs
-export NUPLAN_DATA_ROOT=/nas/shared/opendrivelab/dataset/datasets/nuplan/nuplan-v1.1/splits/trainval
-export NUPLAN_MAPS_ROOT=/nas/shared/opendrivelab/dataset/datasets/nuplan/maps
+# ========== Cache Settings ==========
+CACHE_DIR="YOUR_CACHE_DIR"                  # Path to cache directory
+CACHE_META_PATH="YOUR_CACHE_META_PATH"      # Path to cache metadata CSV
 
-NUM_GPUS=8
-BATCH_SIZE_PER_GPU=64
+# ========== NuPlan Dataset Paths ==========
+export NUPLAN_DEVKIT_PATH="YOUR_NUPLAN_DEVKIT_PATH"      # Path to nuplan-devkit repo
+export NUPLAN_SENSOR_ROOT="YOUR_NUPLAN_SENSOR_ROOT"      # Path to sensor blobs
+export NUPLAN_DATA_ROOT="YOUR_NUPLAN_DATA_ROOT"          # Path to train/val split data
+export NUPLAN_MAPS_ROOT="YOUR_NUPLAN_MAPS_ROOT"          # Path to map files
+
+# ========== Training Configuration ==========
+NUM_GPUS=YOUR_NUM_GPUS
+BATCH_SIZE_PER_GPU=YOUR_BATCH_SIZE
 NUM_ACCUM_BATCHES=$((1024 / BATCH_SIZE_PER_GPU / NUM_GPUS))
-NUM_WORKERS=$((BATCH_SIZE * NUM_GPUS))
-NUM_WORKERS=12
+NUM_WORKERS=$((BATCH_SIZE * NUM_GPUS))      # Adjust based on hardware
+NUM_WORKERS=YOUR_NUM_WORKERS               # Set manually if needed
 
+# ========== Python Environment ==========
 export PYTHONPATH=$PWD:$PYTHONPATH
 export PYTHONPATH=$NUPLAN_DEVKIT_PATH:$PYTHONPATH
 
-export WANDB_PROJECT="scenegen_wod"
-export WANDB_EXP_NAME="nuplan_wophytime"
-export WANDB_ENTITY="opendrivelab"
+# ========== Weights & Biases ==========
+export WANDB_PROJECT="YOUR_WANDB_PROJECT"
+export WANDB_EXP_NAME="YOUR_WANDB_EXP_NAME"
+export WANDB_ENTITY="YOUR_WANDB_ENTITY"
 
 python -W ignore $PWD/nuplan_extent/planning/script/run_training.py \
     group=$SAVE_DIR \

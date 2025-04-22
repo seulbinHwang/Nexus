@@ -1,32 +1,38 @@
-#! /usr/bin/env bash
+#!/usr/bin/env bash
 
-# logs saved under SAVE_DIR/EXPERIMENT/JOB_NAME
-SAVE_DIR=/cpfs01/shared/opendrivelab/opendrivelab_hdd/zhouyunsong/nuplan/trainval/cache_nuPlan
-EXPERIMENT=caching
-JOB_NAME=wod
+# ========== Logging & Experiment Settings ==========
+SAVE_DIR="YOUR_SAVE_DIR"                      # Where logs and checkpoints will be saved
+EXPERIMENT="YOUR_EXPERIMENT_NAME"             # Experiment name
+JOB_NAME="YOUR_JOB_NAME"                      # Job name used for logging/checkpoints
 
-# data will be cached under CACHE_DIR
-CACHE_DIR=/cpfs01/shared/opendrivelab/yenaisheng/wod_test
+# ========== Cache Settings ==========
+CACHE_DIR="YOUR_CACHE_DIR"                    # Path to cache directory
 
-# specify wod path here
-WOD_PATH=/cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl
-TRAINING_TOKEN_LIST_PATH=/cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl/training_token_list.txt
-VALIDATION_TOKEN_LIST_PATH=/cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl/validation_token_list.txt
+# ========== Waymo Dataset Paths ==========
+WOD_PATH="YOUR_WOD_PATH"                      # Path to Waymo dataset
+TRAINING_TOKEN_LIST_PATH="YOUR_TRAINING_TOKEN_LIST_PATH"  # Path to training token list
+VALIDATION_TOKEN_LIST_PATH="YOUR_VALIDATION_TOKEN_LIST_PATH"  # Path to validation token list
 
-export NUPLAN_DEVKIT_PATH=/cpfs01/user/yenaisheng/Nexus/third_party/nuplan-devkit
+# ========== NuPlan Devkit Path ==========
+export NUPLAN_DEVKIT_PATH="YOUR_NUPLAN_DEVKIT_PATH"  # Path to nuplan-devkit repo
+
+# ========== Python Environment ==========
 export PYTHONPATH=$PWD:$PYTHONPATH
 export PYTHONPATH=$NUPLAN_DEVKIT_PATH:$PYTHONPATH
-export OPENBLAS_NUM_THREADS=1 # This is to avoid OpenBlas creating too many threads
-export OMP_NUM_THREADS=1  # Control the number of threads per process for OpenMP
 
-# To cache only a shard of the data, set SPLIT (e.g., 1/4, 2/4,..., 4/4) and uncomment the lines below, including the '+split=$SPLIT' argument
-# SPLIT=1/4
+# ========== OpenBLAS and OpenMP Settings ==========
+export OPENBLAS_NUM_THREADS=1    # To avoid OpenBlas creating too many threads
+export OMP_NUM_THREADS=1         # Control the number of threads per process for OpenMP
+
+# ========== Data Split (Optional) ==========
+# Uncomment the following lines if you need to use data splits
+# SPLIT="YOUR_SPLIT"  # e.g., "1/4", "2/4", etc.
 # CACHE_DIR="$CACHE_DIR/cache_$(echo $SPLIT | sed 's/\//_/g')"
 # echo "CURRENT SPLIT: $SPLIT"
 # echo "CACHE_DIR: $CACHE_DIR"
 
-# number of workers for caching
-NUM_WORKERS=1
+# ========== Worker Configuration ==========
+NUM_WORKERS="YOUR_NUM_WORKERS"  # Number of workers for caching
 
 python nuplan_extent/planning/script/run_training.py \
     group=$SAVE_DIR \

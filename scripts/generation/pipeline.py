@@ -871,7 +871,7 @@ def to_numpy(scene_tensor_wrapper):
     
 if __name__ == '__main__':
     
-    with open('/cpfs01/user/yenaisheng/Nexus/scripts/generation/config.yaml', 'r') as f:
+    with open('Nexus/scripts/generation/config.yaml', 'r') as f:
         cfg = OmegaConf.load(f)
     # specify log_name, lidarpc_token here    
     # cfg = update_config_for_training(cfg)

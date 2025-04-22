@@ -1,30 +1,38 @@
-#! /usr/bin/env bash
-SAVE_DIR="/cpfs01/user/yenaisheng/SceneGen/logs"
-EXPERIMENT="train"
-JOB_NAME="wod"
+#!/usr/bin/env bash
 
-CACHE_DIR=/cpfs01/shared/opendrivelab/yenaisheng/cache_waymo
-CACHE_META_PATH=/cpfs01/shared/opendrivelab/yenaisheng/cache_waymo/trainval/metadata/trainval_metadata_node_0.csv
+# ========== Logging & Experiment Settings ==========
+SAVE_DIR="YOUR_SAVE_DIR"                    # Where logs and checkpoints will be saved
+EXPERIMENT="YOUR_EXPERIMENT_NAME"           # Experiment name
+JOB_NAME="YOUR_JOB_NAME"                    # Job name used for logging/checkpoints
 
-# specify wod path here
-TRAINING_TOKEN_LIST_PATH=/cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl/training_token_list.txt
-VALIDATION_TOKEN_LIST_PATH=/cpfs01/shared/opendrivelab/datasets/Waymo_motion/scenario_pkl/validation_token_list.txt
+# ========== Cache Settings ==========
+CACHE_DIR="YOUR_CACHE_DIR"                  # Path to cache directory
+CACHE_META_PATH="YOUR_CACHE_META_PATH"      # Path to cache metadata CSV
 
-NUM_GPUS=8
-BATCH_SIZE_PER_GPU=32
+# ========== Waymo Dataset Paths ==========
+TRAINING_TOKEN_LIST_PATH="YOUR_TRAINING_TOKEN_LIST_PATH"  # Path to training token list
+VALIDATION_TOKEN_LIST_PATH="YOUR_VALIDATION_TOKEN_LIST_PATH"  # Path to validation token list
+
+# ========== Training Configuration ==========
+NUM_GPUS=YOUR_NUM_GPUS                     # Number of GPUs
+BATCH_SIZE_PER_GPU=YOUR_BATCH_SIZE         # Batch size per GPU
 NUM_ACCUM_BATCHES=$((1024 / BATCH_SIZE_PER_GPU / NUM_GPUS))
-NUM_WORKERS=$((BATCH_SIZE * NUM_GPUS))
-NUM_WORKERS=12
+NUM_WORKERS=$((BATCH_SIZE * NUM_GPUS))    # Adjust workers based on hardware
+NUM_WORKERS=YOUR_NUM_WORKERS              # Manually adjust if needed
 
-export NUPLAN_DEVKIT_PATH=/cpfs01/user/yenaisheng/Nexus/third_party/nuplan-devkit
+# ========== NuPlan Paths ==========
+export NUPLAN_DEVKIT_PATH="YOUR_NUPLAN_DEVKIT_PATH"      # Path to nuplan-devkit repo
 export PYTHONPATH=$PWD:$PYTHONPATH
 export PYTHONPATH=$NUPLAN_DEVKIT_PATH:$PYTHONPATH
-export OPENBLAS_NUM_THREADS=1 # This is to avoid OpenBlas creating too many threads
-export OMP_NUM_THREADS=1  # Control the number of threads per process for OpenMP
 
-export WANDB_PROJECT="scenegen_wod"
-export WANDB_EXP_NAME="waymo_3loss"
-export WANDB_ENTITY="opendrivelab"
+# ========== OpenBLAS and OpenMP Settings ==========
+export OPENBLAS_NUM_THREADS=1    # To avoid OpenBlas creating too many threads
+export OMP_NUM_THREADS=1         # Control the number of threads per process for OpenMP
+
+# ========== Weights & Biases ==========
+export WANDB_PROJECT="YOUR_WANDB_PROJECT"
+export WANDB_EXP_NAME="YOUR_WANDB_EXP_NAME"
+export WANDB_ENTITY="YOUR_WANDB_ENTITY"
 
 python -W ignore $PWD/nuplan_extent/planning/script/run_training.py \
     group=$SAVE_DIR \
