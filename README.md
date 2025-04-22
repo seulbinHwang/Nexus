@@ -38,7 +38,7 @@
 
 </div>
 
-> [Yunsong Zhou](https://zhouyunsong.github.io/), Naisheng Ye, William Ljungbergh, Tianyu Li, _et al._
+> [Yunsong Zhou](https://zhouyunsong.github.io/), [Naisheng Ye](https://Y-vic.github.io/), William Ljungbergh, Tianyu Li, _et al._
 > - :mailbox_with_mail: Primary contact: [Yunsong Zhou]((https://zhouyunsong-sjtu.github.io/)) ( zhouyunsong2017@gmail.com ) 
 
 
