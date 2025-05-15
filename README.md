@@ -96,7 +96,7 @@
 
 <img src="https://opendrivelab.github.io/Nexus/resources/nexus-data.png" alt="Image description" width="100%">
 
-Nexus-Data is induced from real-world scenarios, in which we can obtain real-world map topology and layout. It also includes hazardous driving behaviors through interactions introduced by adversarial traffic generation. The safety-critical scenarios (on nuPlan dataset) can be obtained through this 🔗[data link]().
+Nexus-Data is induced from real-world scenarios, in which we can obtain real-world map topology and layout. It also includes hazardous driving behaviors through interactions introduced by adversarial traffic generation. The safety-critical scenarios (on nuPlan dataset) can be obtained through this 🔗[data link](https://huggingface.co/datasets/OpenDriveLab-org/Nexus-data/tree/main).
 
 
 
