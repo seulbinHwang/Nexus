@@ -30,7 +30,10 @@ from nuplan_extent.planning.training.preprocessing.features.raster_builders impo
 from nuplan_extent.planning.training.preprocessing.features.raster_utils import (
     generate_virtual_center,
 )
-from third_party.CAT.advgen.utils_scenegen import Scenarios
+try:    
+    from third_party.CAT.advgen.utils_scenegen import Scenarios
+except:
+    pass
 
 class ShapeList(NamedTuple):
     """Represents a list of shapes.
