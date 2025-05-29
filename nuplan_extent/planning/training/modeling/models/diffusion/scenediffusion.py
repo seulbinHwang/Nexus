@@ -494,8 +494,7 @@ class simpleDiffusion(nn.Module):
 
         orig_x = x.clone().detach()
         logsnr_t = schedule_func(u_t)
-        logsnr_t = torch.tensor(logsnr_t).to(scene_tensor.device)
-
+        logsnr_t = logsnr_t.clone().detach().to(scene_tensor.device)
         alpha_t = (
             torch.sqrt(torch.sigmoid(logsnr_t))
             .view(scene_tensor.shape[0], scene_tensor.shape[1], scene_tensor.shape[2], 1)
@@ -510,7 +509,7 @@ class simpleDiffusion(nn.Module):
         z_t = torch.where(keep_mask.bool(), scaled_context, orig_x)
 
         logsnr_s = schedule_func(u_s)
-        logsnr_s = torch.tensor(logsnr_s).to(scene_tensor.device)
+        logsnr_s = logsnr_s.to(scene_tensor.device)
 
         u_t = torch.tensor(u_t, device=x.device)
         u_s = torch.tensor(u_s, device=x.device)

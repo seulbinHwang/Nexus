@@ -1,4 +1,6 @@
 scenario_builder:
+  _target_: nuplan.planning.scenario_builder.nuplan_db.nuplan_scenario_builder.NuPlanScenarioBuilder
+  _convert_: all
   vehicle_parameters:
     _target_: nuplan.common.actor_state.vehicle_parameters.VehicleParameters
     _convert_: all
@@ -237,23 +239,25 @@ scenario_builder:
       unknown:
       - 9.0
       - 0.0
-  _target_: nuplan.planning.scenario_builder.nuplan_db.nuplan_scenario_builder.NuPlanScenarioBuilder
-  _convert_: all
-  data_root: /cpfs01/shared/opendrivelab/opendrivelab_hdd/nuplan/dataset/nuplan-v1.1/splits/trainval
-  map_root: /cpfs01/shared/opendrivelab/opendrivelab_hdd/nuplan/dataset/maps
-  sensor_root: /cpfs01/shared/opendrivelab/opendrivelab_hdd/nuplan/dataset/nuplan-v1.1/sensor_blobs
+  data_root: null
+  map_root: null
+  sensor_root: null
   db_files: null
   map_version: nuplan-maps-v1.0
   include_cameras: false
   max_workers: null
   verbose: false
-  scenario_pickle_path: null
 scenario_filter:
   _target_: nuplan.planning.scenario_builder.scenario_filter.ScenarioFilter
   _convert_: all
   scenario_types: null
   scenario_tokens: null
-  log_names: null
+  log_names:
+  - 2021.06.11.12.06.26_veh-35_03726_03971
+  - 2021.06.11.12.09.55_veh-16_00104_00221
+  - 2021.09.02.02.33.00_veh-51_00276_00365
+  - 2021.10.22.18.02.31_veh-28_01717_02099
+  - 2021.10.22.18.45.52_veh-28_01175_01298
   map_names: null
   num_scenarios_per_type: null
   limit_total_scenarios: null
@@ -338,74 +342,4 @@ worker:
   _convert_: all
   use_process_pool: true
   max_workers: 36
-splitter:
-  _target_: nuplan.planning.training.data_loader.log_splitter.LogSplitter
-  _convert_: all
-  log_splits:
-    train:
-    - 2021.10.22.18.02.31_veh-28_01717_02099
-    - 2021.10.22.18.45.52_veh-28_00008_00079
-    - 2021.10.22.18.45.52_veh-28_00168_00302
-    - 2021.10.22.18.45.52_veh-28_00313_00628
-    - 2021.10.22.18.45.52_veh-28_00651_00768
-    - 2021.10.22.18.45.52_veh-28_00780_00896
-    - 2021.10.22.18.45.52_veh-28_00907_00973
-    - 2021.10.22.18.45.52_veh-28_01093_01164
-    - 2021.10.22.18.45.52_veh-28_01175_01298
-    val:
-    - 2021.10.06.08.34.20_veh-53_00179_00244
-    - 2021.10.06.08.34.20_veh-53_00259_00711
-    - 2021.10.06.08.34.20_veh-53_00723_00973
-    - 2021.10.06.08.34.20_veh-53_01000_01070
-    - 2021.10.06.08.34.20_veh-53_01089_01868
-
-  dummy_aggregated_metrics:
-    _target_: nuplan_extent.planning.training.modeling.aggregated_metrics.dummy_aggregated_metrics.DummyAggregatedMetric
-    _convert_: all
-data_augmentation:
-  convert_to_float:
-    _target_: nuplan_extent.planning.training.data_augmentation.convert_to_float.ConvertFloatAugmentor
-    _convert_: all
-val_data_augmentation:
-  convert_to_float:
-    _target_: nuplan_extent.planning.training.data_augmentation.convert_to_float.ConvertFloatAugmentor
-    _convert_: all
-scenario_type_weights:
-  scenario_type_sampling_weights:
-    enable: false
-    scenario_type_weights:
-      unknown: 1.0
-  scenario_type_loss_weights:
-    unknown: 1.0
-common_cfg:
-  input_cfg:
-    input_channel_indexes:
-    - 0
-    - 1
-    - 2
-    - 3
-    - 4
-    - 5
-    - 6
-    raster_map_bev_range:
-    - -104.0
-    - -104.0
-    - 104.0
-    - 104.0
-    meshgrid:
-    - 0.5
-    - 0.5
-    target_width_wm: 416
-    target_height_wm: 416
-    target_width: 416
-    target_height: 416
-    target_pixel_size: 0.5
-    max_speed_normalizer: 24.0
-    dataset: nuplan
-    num_past_steps: 12
-    past_time_horizon: 6.0
-  output_cfg:
-    trajectory_steps: 8
-    time_horizon: 4.0
-  downstream_task: planning
-checkpoint: /cpfs01/shared/opendrivelab/opendrivelab_hdd/zhouyunsong/nuplan/trainval/cache_nuPlan/test_nuplan/training_world_model/2024.11.08.15.28.09/best_model/last.ckpt
+checkpoint: null
