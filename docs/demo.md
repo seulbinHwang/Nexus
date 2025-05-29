@@ -18,10 +18,12 @@ To make it easier to get started, we've prepared a basic pipeline that guides us
 After running pipeline.py, you will see three kinds of visualization GIFs in the `scripts/pipeline/` directory:
 
 1. `task_condition.gif` - Shows the scene conditions and context
-<img src="../assets/bp_condition.gif" width="400">
+<img src="../assets/bp_condition.gif" width="200">
+
 2. `task_gt.gif` - Shows the ground truth trajectories of all agents
-<img src="../assets/bp_gt.gif" width="400">
+<img src="../assets/bp_gt.gif" width="200">
+
 3. `task_pred.gif` - Shows the model's predicted trajectories
-<img src="../assets/bp_pred.gif" width="400">
+<img src="../assets/bp_pred.gif" width="4200">
 
 No additional parameters are needed if the above paths are set correctly in the config.
