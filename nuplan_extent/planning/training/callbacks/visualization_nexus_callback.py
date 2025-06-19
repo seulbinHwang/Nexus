@@ -26,6 +26,7 @@ from nuplan_extent.planning.training.preprocessing.feature_builders.nexus_featur
     SceneTensor,
     decode_scene_tensor,
     unnormalize_roadgraph,
+    encode_scene_tensor
 )
 import copy
 
@@ -158,7 +159,7 @@ class VisualizationNexusCallback(pl.Callback):
                     noise_bp = self.noise_samples_bp[batch_idx][noise_idx]
                     noise_scene_gen = self.noise_samples_scene_gen[batch_idx][noise_idx]
 
-                for task in ["bp", "scene_gen", "intent_attack"]:
+                for task in ["bp", "intent_attack"]:
                     features = copy.deepcopy(batch[0])
                     noise = noise_bp if task in ["bp", "intent_attack"] else noise_scene_gen
                     predictions = self._infer_model(
@@ -344,7 +345,8 @@ class VisualizationNexusCallback(pl.Callback):
                         sinh = st[batch_idx, agent_idx, t_, 3]
                         heading = np.arctan2(sinh, cosh)
                         is_ego = agent_idx == 0
-
+                        if not i == 0 and not valid_mask[batch_idx, agent_idx, :6 * (N+1)-N].any():
+                            continue
                         if task == "intent_attack" and agent_idx >= 2 and i == 1:
                             pass
                         else:
@@ -428,25 +430,93 @@ class VisualizationNexusCallback(pl.Callback):
         self, scene_tensor_features: SceneTensor, n_chosen_prob: int = 0.3
     ) -> torch.Tensor:
 
+        def get_goal_point(example_traj, rg):
+            example_traj = decode_scene_tensor(example_traj)
+            rg = unnormalize_roadgraph(rg)[:,::2,:2]
+            valid_map_lines = abs(rg).sum(dim=(1, 2)) > 0
+            rg = rg[valid_map_lines].double()
+            ego_traj, attack_traj = example_traj[0], example_traj[1]
+
+            trajectory_tensor = attack_traj
+            positions_tensor = rg #[num_traj, num_points, 2]
+
+            fifth_point = trajectory_tensor[4, :2]
+            yaw_cos = trajectory_tensor[4, 2]
+            yaw_sin = trajectory_tensor[4, 3]
+
+            velocity = ((trajectory_tensor[4,0]-trajectory_tensor[0,0])**2 + (trajectory_tensor[4,1]-trajectory_tensor[0,1])**2)**0.5/2
+            inner_radius = torch.abs(velocity) * 7
+            outer_radius = torch.abs(velocity) * 9
+            angle = np.deg2rad(30)
+            start_angle = torch.atan2(yaw_sin, yaw_cos) - angle / 2
+            end_angle = start_angle + angle
+
+            dx = positions_tensor[:, :, 0] - fifth_point[0]
+            dy = positions_tensor[:, :, 1] - fifth_point[1]
+            distances = torch.sqrt(dx**2 + dy**2)
+            angles = torch.atan2(dy, dx)
+
+            inside_sector = (angles >= start_angle) & (angles <= end_angle) & (distances >= inner_radius) & (distances <= outer_radius)
+            traj_idx = inside_sector.any(dim=1)
+            random_true_index = traj_idx[torch.randint(0, len(traj_idx), (1,))]
+
+            true_indices = torch.nonzero(inside_sector)
+            if true_indices.size(0) == 0:
+                valid = 0
+                return encode_scene_tensor(attack_traj[-1]), valid
+            random_index = true_indices[torch.randint(0, true_indices.size(0), (1,))].squeeze()
+
+            goal_point = positions_tensor[random_index[0], min(random_index[1]-1, 0)]
+            next_point = positions_tensor[random_index[0], min(random_index[1]-1, 0)+1]
+            goal_angle = torch.atan2(next_point[1]-goal_point[1], next_point[0]-goal_point[0])
+            angle_cos, angle_sin = torch.cos(goal_angle), torch.sin(goal_angle)
+            vx, vy = velocity*angle_cos, velocity*angle_sin
+            dim = attack_traj[0,-2:]
+
+            # ego_last_point
+            ego_last_point = ego_traj[-1]
+            dx = ego_last_point[0] - fifth_point[0]
+            dy = ego_last_point[1] - fifth_point[1]
+            distances = torch.sqrt(dx**2 + dy**2)
+            angles = torch.atan2(dy, dx)
+            is_in_sector = (angles >= start_angle) & (angles <= end_angle) & (distances >= inner_radius) & (distances <= outer_radius)
+            
+            if is_in_sector and torch.rand(1) < 0.5:
+                
+                goal_point = ego_last_point[:2]
+                angle_cos, angle_sin = ego_last_point[2], ego_last_point[3]
+                vx, vy = velocity*angle_cos, velocity*angle_sin
+                valid = 2
+            else:
+                valid = 1
+                pass
+            
+            goal_tensor = encode_scene_tensor(torch.tensor([goal_point[0], goal_point[1], angle_cos, angle_sin, vx, vy, dim[0], dim[1]]).cuda())
+            return goal_tensor, valid
+
         task_mask = torch.zeros_like(scene_tensor_features.tensor)
         valid_mask =  scene_tensor_features.validity.bool()
         for batch_idx in range(scene_tensor_features.tensor.shape[0]):
             ego_pos = scene_tensor_features.tensor[batch_idx,0,0,:2]
             distances = torch.norm(scene_tensor_features.tensor[batch_idx,1:,0,:2] - ego_pos, dim=1)
             distances = torch.where(valid_mask[batch_idx,1:,0], distances, torch.tensor(1e6))
-            closest_index = torch.argmin(distances) + 1
+            values, indices = torch.topk(distances, k=4, largest=False)
+            count = min(random.randint(0, len(indices)-1), max(len(indices)-1, 0))
+            closest_index = indices[count] + 1
             # change to No. 1 index
             temp = scene_tensor_features.tensor[batch_idx,1].clone()
-            scene_tensor_features.tensor[batch_idx,1] = scene_tensor_features.tensor[batch_idx,closest_index]
-            scene_tensor_features.tensor[batch_idx,closest_index] = temp
+            scene_tensor_features.tensor[batch_idx,1] = scene_tensor_features.tensor[batch_idx,closest_index].clone()
+            scene_tensor_features.tensor[batch_idx, closest_index] = temp
             # apply intent attack
-            scene_tensor_features.tensor[batch_idx,1,-1,:4] = scene_tensor_features.tensor[batch_idx,0,-1,:4].clone()
-            scene_tensor_features.validity[batch_idx,1,-1] = 1
+            # goal_point = scene_tensor_features.tensor[batch_idx,0,-1,:4].clone()
+            goal_point, valid = get_goal_point(scene_tensor_features.tensor[batch_idx,:2,...].clone(), scene_tensor_features.road_graph[batch_idx].clone())
+            scene_tensor_features.tensor[batch_idx,1,-1,:] = goal_point
+            scene_tensor_features.validity[batch_idx,1,:] = 1
 
         task_mask[:, :, :5, :] = 1 # set the first 5 timesteps to be conditioned on
         task_mask[:, :2, -1] = 1 # set the goal point of the ego car and attack car
 
-        return task_mask
+        return task_mask, valid
     
     def _create_task_mask(
         self, scene_tensor_features: SceneTensor, n_chosen_prob: int = 0.3
@@ -480,10 +550,10 @@ class VisualizationNexusCallback(pl.Callback):
                     1  # set the first 5 timesteps to be conditioned on
                 )
                 features["task_mask"] = bp_mask
-            elif task == "scene_gen":
-                features["task_mask"] = self._create_task_mask(features["scene_tensor"])
+            # elif task == "scene_gen":
+            #     features["task_mask"] = self._create_task_mask(features["scene_tensor"])
             elif task == "intent_attack":
-                features["task_mask"] = self._create_intent_attack_mask(features["scene_tensor"])
+                features["task_mask"], features["valid"] = self._create_intent_attack_mask(features["scene_tensor"])
             predictions = move_features_type_to_device(
                 pl_module.model.forward_inference(features, noise), torch.device("cpu")
             )

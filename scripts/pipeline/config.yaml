@@ -322,11 +322,11 @@ model:
     map_features:
     - LANE
     - LANE_CONNECTOR
-    - STOP_LINE
-    - CROSSWALK
+    # - STOP_LINE
+    # - CROSSWALK
     map_num_points_polylines: 21
     map_dim_points_polyline: 7
-    map_num_max_polylines: 128
+    map_num_max_polylines: 256
   target_builders:
   - _target_: nuplan_extent.planning.training.preprocessing.feature_builders.ego_trajectory_with_past_target_builder.EgoTrajectoryWithPastTargetBuilder
     _convert_: all

@@ -361,35 +361,17 @@ class simpleDiffusion(nn.Module):
         if self.pred_param == "v":
             x_pred = alpha_t * z_t - sigma_t * pred # pred_x_start
             pred_noise = (recip_alpha_t * z_t - x_pred) / recipml_alpha_t # pred_noise
-            # if grad_list is not None:
-            #     [grad, x_t, target] = grad_list
-            #     pred_noise = pred_noise + sigma_s * grad/10
-            #     # print((x_pred -(recip_alpha_t * x_t - recipml_alpha_t * pred_noise))[0,0,:,0])
-            #     # print('grad', grad[0,0,:,0])
-            #     # print('x_pred',x_pred[0,0,:,0])
-            #     # print('target', target[0,0,:,0])
-            #     x_pred = recip_alpha_t * z_t - recipml_alpha_t * pred_noise
-            #     # x_pred = target
-            #     # print((x_pred-target)[0,0,:,0])
-            #     # print(x_pred[0,0,:,0])
-            #     # import pdb; pdb.set_trace()
         elif self.pred_param == "eps":
             x_pred = (z_t - sigma_t * pred) / alpha_t
 
         x_pred = self.constrain(x_pred, **constrain)
         if grad_list is not None:
             [grad, x_t, target] = grad_list
-            # mu = alpha_s * (z_t * (1 - c) / alpha_t + c * x_pred) - recipml_alpha_t * sigma_s * grad
             mu = alpha_s * (z_t * (1 - c) / alpha_t + c * x_pred) - grad*300
-            # mu = x_pred * alpha_s *c  + alpha_s * (z_t * (1 - c) / alpha_t) + (1 - c) * sigma_s * grad/10 * (1 - alpha_s**2).sqrt()
         else:
             mu = alpha_s * (z_t * (1 - c) / alpha_t + c * x_pred)
-        # mu = x_pred * alpha_s *c  + alpha_s * (z_t * (1 - c) / alpha_t)
         
-        # mu = x_pred * alpha_s *c  +  (1 - c) * pred_noise * (1 - alpha_s**2).sqrt()
         variance = (sigma_s**2) * c
-        # print('mu', mu[0,0,:,0])
-        # print('alpha', alpha_s[0,0,:,0])
 
         return mu, variance
 
@@ -569,9 +551,6 @@ class simpleDiffusion(nn.Module):
         indices = torch.nonzero(keep_flag_mask, as_tuple=False)
         first_index = indices[0] if indices.numel() > 0 else torch.tensor([0])
         target = scene_tensor.clone()
-        # for idx in indices:
-        #     target[idx[0], idx[1], idx[2]:, :] = scene_tensor[idx[0], idx[1], idx[2], :].repeat(1, 1, (keep_mask.shape[2] - idx[2]), 1)
-        # target[first_index[0], first_index[1]] = scene_tensor[first_index[0], first_index[1], first_index[2]].repeat(1, 1, keep_mask.shape[2], 1)
 
         return target
 
@@ -776,19 +755,13 @@ class simpleDiffusion(nn.Module):
         loss = torch.sum(weight * (eps_pred - eps_t) ** 2)
         # velo_loss = self.compute_traj_loss(pred, alpha_t, z_t, sigma_t, valid_mask, weight)
         # map_loss = self.compute_map_loss(pred, alpha_t, z_t, sigma_t, valid_mask, weight, raw_map)
-        # coll_loss = self.compute_repulsion_loss(pred, alpha_t, z_t, sigma_t, valid_mask)
         # coll_loss = self.compute_collision_loss(pred, alpha_t, z_t, sigma_t, valid_mask, weight)
-
-        # print(f"Loss: {loss}, Velo Loss: {velo_loss}, Map Loss: {map_loss}, Coll Loss: {coll_loss}")
-        # print(f"Loss: {loss}, Map Loss: {map_loss}")
 
         # loss = loss + velo_loss + map_loss + coll_loss
         # loss = loss + map_loss + velo_loss
         return (
             loss,
             dict(
-                # diffused_scene_tensor=z_t,
-                # pred_scene_tensor=x_pred,
             ),
         )
     
@@ -854,8 +827,6 @@ class simpleDiffusion(nn.Module):
             # loss = penalty.sum() / (valid_pairs + 1e-6)  # Avoid division by zero
             loss = penalty.sum()
 
-            # import pdb; pdb.set_trace()
-
             return loss
 
     def compute_traj_loss(self, pred, alpha_t, z_t, sigma_t, valid_mask, weight):
@@ -897,9 +868,7 @@ class simpleDiffusion(nn.Module):
         anchor_pred = encoded_map[torch.arange(min_index.shape[0]).unsqueeze(-1).expand_as(min_index),min_index]
         # if distance > threshold, then compute the l2 loss
         threshold = 3.75/(2*FEATURE_STD[0]) # 3.5m
-        distance = torch.norm((anchor_pred-x_pred),dim=-1).reshape(B*NA,NT)
-        # threshold = 3.75**2/(2*FEATURE_STD[0]) # 3.5m
-        # distance = torch.sum((anchor_pred-x_pred)**2,dim=-1).reshape(B*NA,NT)       
+        distance = torch.norm((anchor_pred-x_pred),dim=-1).reshape(B*NA,NT)     
         in_threshold_mask = distance < threshold
         first_true_indices = torch.argmax(valid_mask.reshape(B*NA,NT), dim=-1) 
         use_mask = in_threshold_mask[torch.arange(B*NA), first_true_indices] * torch.any(valid_mask.reshape(B*NA,NT), dim=-1)
@@ -940,9 +909,6 @@ class simpleDiffusion(nn.Module):
             else self.logsnr_schedule_cosine_shifted
         )
         task_mask = torch.logical_or(task_mask, control_mask)
-        # if self.fill_scene_tensor:
-        #     keep_mask = task_mask[:,:,:,0].bool()
-        #     diffusion_times = torch.where(~keep_mask, diffusion_times, torch.full(diffusion_times.shape, 0.017, device=diffusion_times.device))
 
         # create the local context
         local_context = scene_tensor * task_mask
@@ -1006,9 +972,6 @@ class simpleDiffusion(nn.Module):
         consist_loss = torch.sum(weight * (x_pred_hn - x_pred_ln) ** 2)
         velo_loss = self.compute_traj_loss(pred_hn, alpha_t_hn, z_t_hn, sigma_t_hn, valid_mask, weight)
         map_loss = self.compute_map_loss(pred_hn, alpha_t_hn, z_t_hn, sigma_t_hn, valid_mask, weight, raw_map)
-
-        # print(f"Loss: {loss}, Velo Loss: {velo_loss}, Map Loss: {map_loss}, Consist Loss: {consist_loss}")
-        # print(f"Loss: {loss}, Map Loss: {map_loss}")
 
         loss = self.loss_factor[0] * loss + self.loss_factor[1] * velo_loss + self.loss_factor[2] * map_loss + self.loss_factor[3] * consist_loss
         # loss = loss + map_loss + velo_loss

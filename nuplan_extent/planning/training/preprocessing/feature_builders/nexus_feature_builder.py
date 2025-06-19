@@ -40,7 +40,7 @@ from ..features.scene_tensor import (SceneTensor,
     SCENE_TENSOR_FEATURES,N_SCENE_TENSOR_FEATURES,  
     FEATURE_MEANS,FEATURE_STD,
     VEH_PARAMS,EGO_WIDTH,EGO_LENGTH,CLASSES,
-    unnormalize_roadgraph,decode_scene_tensor,encode_agent,encode_ego)  
+    unnormalize_roadgraph,decode_scene_tensor,encode_agent,encode_ego,encode_scene_tensor)  
 
 
 class NexusFeatureBuilder(HorizonVectorFeatureBuilderV2):

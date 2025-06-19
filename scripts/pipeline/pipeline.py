@@ -115,37 +115,6 @@ def compute_features(builder: AbstractFeatureBuilder, vector_data: HorizonVector
         agent_type.append('vehicle')
         n_agents += 1
 
-    # Encode pedestrian agents
-    for i, id_ in enumerate(ids_ped):
-        if i >= builder._num_max_agents[1]:
-            break
-        mask = peds[..., 0] == id_
-        time_validity_ = mask.sum(axis=1).astype(bool)
-        if time_validity_.sum() < 5:
-            continue
-
-        scene_tensor[n_agents, time_validity_] = encode_agent(
-            "PEDESTRIAN",
-            peds[mask],  # type: ignore
-        )
-        scene_tensor_validity[n_agents] = time_validity_
-        idx2token.append(track_token_id_mapping['PEDESTRIAN'][int(id_)])
-        agent_type.append('pedestrian')
-        n_agents += 1
-
-    # Encode bicycle agents
-    for i, id_ in enumerate(ids_bic):
-        if i >= builder._num_max_agents[2]:
-            break
-        mask = bic[..., 0] == id_
-        time_validity_ = mask.sum(axis=1).astype(bool)
-        if time_validity_.sum() < 5:
-            continue
-        scene_tensor[n_agents, time_validity_] = encode_agent("BICYCLE", bic[mask])  # type: ignore
-        scene_tensor_validity[n_agents] = time_validity_
-        idx2token.append(track_token_id_mapping['BICYCLE'][int(id_)])
-        agent_type.append('bicycle')
-        n_agents += 1
 
     # Encode the ego vehicle state
     ego_state = encode_ego(ego)
@@ -173,7 +142,8 @@ def compute_features(builder: AbstractFeatureBuilder, vector_data: HorizonVector
     map_data = vector_data.data["map"]
 
     for i in range(min(builder._map_num_max_polylines, len(map_data))):
-        road_graph[i], road_graph_validity[i] = builder._encode_map_object(map_data[i])
+        encoded_rg, encoded_rg_validity = builder._encode_map_object(map_data[i])
+        road_graph[i,...,:encoded_rg.shape[-1]], road_graph_validity[i,...,:encoded_rg.shape[-1]] = encoded_rg, encoded_rg_validity
 
     # Normalize road graph coordinates
     road_graph[..., :2] = (road_graph[..., :2] - np.array(FEATURE_MEANS)[:2]) / (
@@ -400,11 +370,13 @@ def visualize_scene_tensor(
                     color = synthetic_gradient[t_]  # Synthetic agents use red-purple gradient
                 else:
                     color = env_gradient[t_]  # Environment simulation agents use green-blue gradient
+                # import pdb; pdb.set_trace()
 
                 for i, (st, canvas, overlay) in enumerate(
                     [
                         (original_scene_tensor, gt_canvas, gt_overlay),
                         (sampled_tensor, pred_canvas, pred_overlay),
+                        # (original_scene_tensor, pred_canvas, pred_overlay),
                     ]
                 ):
                     padding = st.shape[-1] - 6
@@ -415,8 +387,9 @@ def visualize_scene_tensor(
                     sinh = st[batch_idx, agent_idx, t_, 3]
                     heading = np.arctan2(sinh, cosh)
                     is_ego = agent_idx == 0
-
-                    if task == "scene_gen" and i == 1 and t_ < 6 * (N+1) - N and not task_mask[batch_idx, agent_idx, t_, 0]:
+                    if task == "scene_gen" and i == 1 and t_ < 6 * (N+1) - N and not task_mask[batch_idx, agent_idx, t_, 0] :
+                        continue
+                    if not i == 0 and not valid_mask[batch_idx, agent_idx, :6 * (N+1)-N].any():
                         continue
                     if task == "intent_attack" and agent_idx >= 2 and i == 1:
                         pass
