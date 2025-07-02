@@ -1,3 +1,6 @@
+> [!IMPORTANT]
+> 🌟 Stay up to date at [opendrivelab.com](https://opendrivelab.com/#news)!
+
 <div id="top" align="center">
 
 <img src="https://opendrivelab.github.io/Nexus/resources/NEXUS-text.gif" alt="Image description" width="70%">
