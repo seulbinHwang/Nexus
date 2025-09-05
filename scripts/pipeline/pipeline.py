@@ -281,7 +281,7 @@ def linear_interpolation(data:np.ndarray,task,N=3) -> np.ndarray:
         extend_data=np.concatenate(extend_data,axis=0)
         extend_data=extend_data.swapaxes(-2,0)
         return extend_data
-    if task == 'scene_tensor':
+    if task == "scene_tensor":
         extend_data=interpolate(data,N)
     elif task == 'mask':
         # there are 2 types of mask: valid_mask (B,NA,NT) and task_mask(B,NA,NT,C)
@@ -327,8 +327,8 @@ def visualize_scene_tensor(
     
     # Linear interpolation for smooth visualization
     N=3  # gt1, inter=1/N*gt1+(1-1/N)*gt2, gt2
-    original_scene_tensor = linear_interpolation(original_scene_tensor,task='scene_tensor',N=N)
-    sampled_tensor = linear_interpolation(sampled_tensor,task='scene_tensor',N=N)
+    original_scene_tensor = linear_interpolation(original_scene_tensor,task="scene_tensor",N=N)
+    sampled_tensor = linear_interpolation(sampled_tensor,task="scene_tensor",N=N)
     valid_mask = linear_interpolation(valid_mask,task='mask',N=N)
     task_mask = linear_interpolation(task_mask.cpu().numpy(),task='mask',N=N) # dim as scene_tensor
     

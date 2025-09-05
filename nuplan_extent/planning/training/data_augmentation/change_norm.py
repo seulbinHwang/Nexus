@@ -52,15 +52,15 @@ class ChangeNormAugmentor(AbstractAugmentor):
         scenario: Optional[AbstractScenario] = None
     ) -> Tuple[FeaturesType, TargetsType]:
         """Inherited, see superclass."""
-        dtype = features['scene_tensor'].tensor.dtype
-        # print('scene tensor shape: ', features['scene_tensor'].tensor.shape)
+        dtype = features["scene_tensor"].tensor.dtype
+        # print('scene tensor shape: ', features["scene_tensor"].tensor.shape)
         # print('original STD: ', np.array(OLD_FEATURE_STD, dtype=dtype))
         # print('current STD: ', np.array(FEATURE_STD, dtype=dtype))
-        # print("(0) encoded ego at future 1: ", features['scene_tensor'].tensor[0,6])
-        features['scene_tensor'].tensor = features['scene_tensor'].tensor * np.array(OLD_FEATURE_STD, dtype=dtype) * 2.0 + np.array(OLD_FEATURE_MEANS, dtype=dtype)
-        # print("(1) decoded ego at future 1: ", features['scene_tensor'].tensor[0,6])
-        features['scene_tensor'].tensor = (features['scene_tensor'].tensor - np.array(FEATURE_MEANS, dtype=dtype)) / np.array(FEATURE_STD, dtype=dtype) / 2.0
-        # print("(2) encoded ego at future 1: ", features['scene_tensor'].tensor[0,6])
+        # print("(0) encoded ego at future 1: ", features["scene_tensor"].tensor[0,6])
+        features["scene_tensor"].tensor = features["scene_tensor"].tensor * np.array(OLD_FEATURE_STD, dtype=dtype) * 2.0 + np.array(OLD_FEATURE_MEANS, dtype=dtype)
+        # print("(1) decoded ego at future 1: ", features["scene_tensor"].tensor[0,6])
+        features["scene_tensor"].tensor = (features["scene_tensor"].tensor - np.array(FEATURE_MEANS, dtype=dtype)) / np.array(FEATURE_STD, dtype=dtype) / 2.0
+        # print("(2) encoded ego at future 1: ", features["scene_tensor"].tensor[0,6])
         return features, targets
 
     @property

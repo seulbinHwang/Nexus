@@ -53,9 +53,9 @@ class ResetVAugmentor(AbstractAugmentor):
         scenario: Optional[AbstractScenario] = None
     ) -> Tuple[FeaturesType, TargetsType]:
         """Inherited, see superclass."""
-        dtype = features['scene_tensor'].tensor.dtype
+        dtype = features["scene_tensor"].tensor.dtype
         # invalid the past 4 frames of ego (unsee ego history)
-        # features['scene_tensor'].validity[0,:4] = 0
+        # features["scene_tensor"].validity[0,:4] = 0
         # data = {
         #     "features": features,
         #     "targets": targets,
@@ -69,11 +69,11 @@ class ResetVAugmentor(AbstractAugmentor):
         # import pdb; pdb.set_trace()
         # NA,NT,Ndim
         # decode scene_tensor
-        scene_tensor = decode_scene_tensor(features['scene_tensor'].tensor[...,:8])
+        scene_tensor = decode_scene_tensor(features["scene_tensor"].tensor[...,:8])
 
         # copy w,l of ego to all agents:  scene_tensor[0,0,-2:]
         # scene_tensor[:,5:,-2:] = scene_tensor[0,0,-2:].reshape(1,1,2)
-        valid_mask = features['scene_tensor'].validity
+        valid_mask = features["scene_tensor"].validity
         # change v
         detas=[]
         freq = 2
@@ -91,7 +91,7 @@ class ResetVAugmentor(AbstractAugmentor):
         new_st = np.concatenate(detas, axis=1)
         scene_tensor[...,[4,5]] = new_st[...,[4,5]] 
         # encode scene_tensor
-        features['scene_tensor'].tensor[...,:8] = encode_scene_tensor(scene_tensor).astype(dtype)
+        features["scene_tensor"].tensor[...,:8] = encode_scene_tensor(scene_tensor).astype(dtype)
         return features, targets
 
     @property

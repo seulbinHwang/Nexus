@@ -402,6 +402,7 @@ class PastCurrentAgentsVectorBuilder(VectorBuilderBase):
                                                        vector_data, iteration)
         prepared_scenario._data['track_token_id_mapping'] = track_token_id_mapping
         prepared_scenario._data['map_name'] = scenario.map_api.map_name
+
     def _get_vector_data(
         self, detections: DetectionsTracks, offset, track_token_id_mapping
     ) -> npt.NDArray[np.float32]:

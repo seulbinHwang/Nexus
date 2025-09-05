@@ -9,6 +9,8 @@ from nuplan.planning.simulation.history.simulation_history_buffer import Simulat
 from nuplan.common.maps.maps_datatypes import TrafficLightStatusData
 
 
+
+
 @dataclass(frozen=True)
 class HorizonPlannerInitialization:
     """

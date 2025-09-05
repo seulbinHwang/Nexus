@@ -26,6 +26,8 @@ logger = logging.getLogger(__name__)
 class SimulationFeatureVideoCallback(AbstractCallback):
     """
     Feature video callback. Render features of selected scenarios during simulation.
+
+    # nuplan/planning/script/config/simulation/callback/simulation_log_callback.yaml
     """
 
     def __init__(

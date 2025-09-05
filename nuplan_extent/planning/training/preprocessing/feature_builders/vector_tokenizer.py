@@ -75,7 +75,7 @@ class VectorTokenizer:
     ) -> Tuple[FeaturesType, TargetsType]:
         """Inherited, see superclass."""
         # feature dim : track_token, vx, vy, heading, width, length, x, y
-        generic_agents = features['generic_agents']
+        generic_agents = features["generic_agents"]
         selected_classes = ["VEHICLE", "PEDESTRIAN", "BICYCLE"]
         batch_size = len(generic_agents.ego)
         batched_sequence_tokens = BatchTokenSequence()
@@ -96,9 +96,9 @@ class VectorTokenizer:
             raster_map = features['raster'].data[None] if 'raster' in features else None
             if self.lora_fintuning:
                 for i in range(batch_size):
-                    features['generic_agents'].ego[i] = features['generic_agents'].ego[i]
+                    features["generic_agents"].ego[i] = features["generic_agents"].ego[i]
                     for class_name in selected_classes:
-                        features['generic_agents'].agents[class_name][i] = features['generic_agents'].agents[class_name][i]
+                        features["generic_agents"].agents[class_name][i] = features["generic_agents"].agents[class_name][i]
             device = None
             dtype = None
 

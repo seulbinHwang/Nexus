@@ -618,7 +618,7 @@ class simpleDiffusion(nn.Module):
             else self.logsnr_schedule_cosine_shifted
         )
         
-        constrain={'mode':self.constrain_mode,'gamma':self.constraint_gamma,'raw_map':raw_map,'valid_mask':valid_mask,'keep_mask':keep_mask.bool(),'scene_tensor':scene_tensor}
+        constrain={'mode':self.constrain_mode,'gamma':self.constraint_gamma,'raw_map':raw_map,'valid_mask':valid_mask,'keep_mask':keep_mask.bool(),"scene_tensor":scene_tensor}
         # Steps T -> 1
         scaling_matrix = self._generate_scheduling_matrix(scene_tensor)
         scaling_matrix, z_t = self._filling_scene_tensor(scene_tensor, z_t, keep_mask, scaling_matrix)

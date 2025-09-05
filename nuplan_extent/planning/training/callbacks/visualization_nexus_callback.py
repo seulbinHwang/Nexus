@@ -140,7 +140,7 @@ class VisualizationNexusCallback(pl.Callback):
         :param prefix: prefix to add to the log tag
         """
         for batch_idx, batch in enumerate(dataloader):
-            batch[0]['scene_tensor'].tensor=batch[0]['scene_tensor'].tensor[...,:8]
+            batch[0]["scene_tensor"].tensor=batch[0]["scene_tensor"].tensor[...,:8]
             for noise_idx in range(self.num_noise_samples_to_vis):
                 features = copy.deepcopy(batch[0])
                 if self.noise_samples_scene_gen[batch_idx][noise_idx] is None:
@@ -238,7 +238,7 @@ class VisualizationNexusCallback(pl.Callback):
             extend_data=np.concatenate(extend_data,axis=0)
             extend_data=extend_data.swapaxes(-2,0)
             return extend_data
-        if task == 'scene_tensor':
+        if task == "scene_tensor":
             extend_data=interpolate(data,N)
         elif task == 'mask':
             # there are 2 types of mask: valid_mask (B,NA,NT) and task_mask(B,NA,NT,C)
@@ -287,8 +287,8 @@ class VisualizationNexusCallback(pl.Callback):
         
         # linear interpolation
         N=3  # gt1, inter=1/N*gt1+(1-1/N)*gt2, gt2
-        original_scene_tensor = self.linear_interpolation(original_scene_tensor,task='scene_tensor',N=N)
-        sampled_tensor = self.linear_interpolation(sampled_tensor,task='scene_tensor',N=N)
+        original_scene_tensor = self.linear_interpolation(original_scene_tensor,task="scene_tensor",N=N)
+        sampled_tensor = self.linear_interpolation(sampled_tensor,task="scene_tensor",N=N)
         valid_mask = self.linear_interpolation(valid_mask,task='mask',N=N)
         task_mask = self.linear_interpolation(task_mask.numpy(),task='mask',N=N) # dim as scene_tensor
         

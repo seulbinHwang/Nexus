@@ -155,7 +155,7 @@ class VisualizationVectorizedReconstructionCallback(pl.Callback):
             
             target_raster_map = (raster_map * 255).astype(np.uint8).transpose(0, 2, 3, 1)[:, None]  # B, t, h, w, c
             target_raster_map[..., 2] = 0 # clear the traffic light channel
-            num_target_timestep = predictions['generic_agents'].ego[0].shape[0]
+            num_target_timestep = predictions["generic_agents"].ego[0].shape[0]
             target_raster_map = np.tile(target_raster_map, (1, num_target_timestep, 1, 1, 1))
             
             traffic_light_raster = predictions['raster'].data[:, 9].long().numpy()
@@ -198,7 +198,7 @@ class VisualizationVectorizedReconstructionCallback(pl.Callback):
             
             target_raster_map = (raster_map * 255).astype(np.uint8).transpose(0, 2, 3, 1)[:, None]  # B, t, h, w, c
             # target_raster_map[..., 2] = 0 # clear the traffic light channel
-            num_target_timestep = predictions['generic_agents'].ego[0].shape[0]
+            num_target_timestep = predictions["generic_agents"].ego[0].shape[0]
             target_raster_map = np.tile(target_raster_map, (1, num_target_timestep, 1, 1, 1))            
         return predict_raster_map, target_raster_map
 
@@ -230,8 +230,8 @@ class VisualizationVectorizedReconstructionCallback(pl.Callback):
         # B, T, C, H, W
         # preprocess target features
         
-        batch_size = len(predictions['generic_agents'].ego)
-        num_target_steps = predictions['generic_agents'].ego[0].shape[0]
+        batch_size = len(predictions["generic_agents"].ego)
+        num_target_steps = predictions["generic_agents"].ego[0].shape[0]
         all_seqeuence_tokens = predictions['all_seqeuence_tokens']
         num_predict_steps = all_seqeuence_tokens.data[0].num_frames
         
@@ -255,7 +255,7 @@ class VisualizationVectorizedReconstructionCallback(pl.Callback):
         target_canvas += target_raster_map
         predict_canvas += predict_raster_map
 
-        class_names = list(predictions['generic_agents'].agents.keys())
+        class_names = list(predictions["generic_agents"].agents.keys())
 
         target_sequence_tokens = predictions['sequence_tokens']
         pred_sequence_tokens = predictions['all_seqeuence_tokens']

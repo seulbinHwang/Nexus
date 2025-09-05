@@ -104,11 +104,13 @@ class WorldModelAgents(AbstractMLAgents):
 
         # Construct input features
         initialization = HorizonPlannerInitialization(
-            mission_goal=self._scenario.get_mission_goal(),
+            # 시나리오가 끝나고도 계속 진행했을 때 최종적으로 도달해야 하는 포즈 (존재하지 않을 수도 있음)
+            mission_goal=self._scenario.get_mission_goal(), # (x, y, yaw) 의 StateSE2
             route_roadblock_ids=self._scenario.get_route_roadblock_ids(),
             map_api=self._scenario.map_api,
             scenario=self._scenario,
-            expert_goal_state=self._scenario.get_expert_goal_state(),
+            # 전문 운전자(ground truth)의 실제 마지막 상태 (항상 존재)
+            expert_goal_state=self._scenario.get_expert_goal_state(), # (x, y, yaw) 의 StateSE2
         )
         traffic_light_data = self._scenario.get_traffic_light_status_at_iteration(
             next_iteration.index)
@@ -132,7 +134,7 @@ class WorldModelAgents(AbstractMLAgents):
         """Inherited, see superclass."""
         # Propagate model
         predictions = self._model_loader.infer(features)
-        generic_agents_input = predictions['generic_agents'].agents
+        generic_agents_input = predictions["generic_agents"].agents
 
         # Extract trajectory prediction
         if self.prediction_type not in predictions:

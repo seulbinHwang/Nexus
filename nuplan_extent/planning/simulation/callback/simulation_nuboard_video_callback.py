@@ -38,6 +38,7 @@ from nuplan.planning.simulation.simulation_setup import SimulationSetup
 from nuplan.planning.simulation.trajectory.abstract_trajectory import \
     AbstractTrajectory
 from nuplan_extent.planning.simulation.main_callback.utils import save_video
+from bokeh.server.callbacks import PeriodicCallback
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
@@ -461,7 +462,6 @@ class SimulationNuboardVideoCallback(AbstractCallback):
         """
         scenario = setup.scenario
         scenario_name = scenario.scenario_name
-        database_interval = scenario.database_interval
         logger.info("Rendering failure case for scenario %s", scenario_name)
 
         # Create simulation figure

@@ -41,7 +41,6 @@ future_trajectory_sampling:
 
 # All feature builders
 feature_builders:
-
   - _target_: nuplan_extent.planning.training.preprocessing.feature_builders.nexus_feature_builder.NexusFeatureBuilder
     _convert_: 'all'
     agent_features:

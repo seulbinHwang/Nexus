@@ -56,11 +56,9 @@ class HorizonSimulation(Simulation):
 
         # Initialize observations
         self._observations.initialize()
-
         # Add the current state into the history buffer
         self._history_buffer.append(self._ego_controller.get_state(),
                                     self._observations.get_observation())
-
         # Return the planner initialization structure for this simulation
         return HorizonPlannerInitialization(
             expert_goal_state=self._scenario.get_expert_goal_state(),
@@ -75,6 +73,9 @@ class HorizonSimulation(Simulation):
         This function also decides whether simulation should still continue. This flag can be queried through
         reached_end() function
         :param trajectory: computed trajectory from planner.
+            # trajectory: InterpolatedTrajectory
+                # List[EgoState(InterpolatableState)] 를 감싼 것
+                # 현재 포함 총 81개 미래 궤적 점으로 만든 것
         """
         if self._history_buffer is None:
             raise RuntimeError("Simulation was not initialized!")
@@ -85,6 +86,7 @@ class HorizonSimulation(Simulation):
         # Measurements
         iteration = self._time_controller.get_iteration()
         ego_state = self._ego_controller.get_state()
+        # 시작할 때 있었던 agents만 계속 관찰
         observation = self._observations.get_observation()
         traffic_light_status = list(self._scenario.get_traffic_light_status_at_iteration(iteration.index))
 

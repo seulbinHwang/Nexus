@@ -158,7 +158,7 @@ class WaymoVectorFeatureBuilderV2(AbstractFeatureBuilder,
             output: HorizonVectorV2 = self._unpack_feature_from_tensor_dict(
                 tensors, list_tensors, list_list_tensors)
 
-            return output,sim_eval_agent_ids
+            return output, sim_eval_agent_ids
 
     def reorder_agents(self, list_tensors: Dict[str, List[torch.Tensor]], scenario_path: str):
         # precede the sim agents in the list of agents

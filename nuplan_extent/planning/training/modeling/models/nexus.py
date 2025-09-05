@@ -166,16 +166,16 @@ class Nexus(TorchModuleWrapper):
         # import pdb; pdb.set_trace()
         n_rollouts = 32
         # Extract the last dimension to agents_id
-        agents_id = input_features['scene_tensor'].tensor[:,:,0, -1]
-        # Remove the last dimension from input_features['scene_tensor'].tensor
-        input_features['scene_tensor'].tensor = input_features['scene_tensor'].tensor[..., :-1]
+        agents_id = input_features["scene_tensor"].tensor[:,:,0, -1]
+        # Remove the last dimension from input_features["scene_tensor"].tensor
+        input_features["scene_tensor"].tensor = input_features["scene_tensor"].tensor[..., :-1]
         # repeat and batch essential features: [B, ...] => [32*B, ...]
         tmp_feature_dict = input_features.copy()
         original_bs = tmp_feature_dict["scene_tensor"].tensor.shape[0]
         # repeat the scene_tensor: [0-31: batch 1], [32-63: batch 2]....
-        for key, value in vars(tmp_feature_dict['scene_tensor']).items():
+        for key, value in vars(tmp_feature_dict["scene_tensor"]).items():
             if isinstance(value, torch.Tensor):
-                tmp_feature_dict['scene_tensor'].__setattr__(key, value.repeat_interleave(n_rollouts, dim=0))
+                tmp_feature_dict["scene_tensor"].__setattr__(key, value.repeat_interleave(n_rollouts, dim=0))
 
         # inpainting here
         scene_tensor_features: SceneTensor = tmp_feature_dict["scene_tensor"]
@@ -224,7 +224,7 @@ class Nexus(TorchModuleWrapper):
         for batch_index, tok_seq in enumerate(sampled_tensor):
             batch_number = batch_index // n_rollouts
             sim_agent_rollouts[batch_number].append(tok_seq)
-        out = {"scene_tensor": input_features['scene_tensor'],
+        out = {"scene_tensor": input_features["scene_tensor"],
                 "sim_agents_rollouts": sim_agent_rollouts,
                 "agents_map": agents_id}
         return out
@@ -442,7 +442,7 @@ class Nexus(TorchModuleWrapper):
         """
         # import pdb; pdb.set_trace()
         # Encode image
-        input_features['scene_tensor'].tensor = input_features['scene_tensor'].tensor[...,:8] # to exclude agents id from scene_tensor
+        input_features["scene_tensor"].tensor = input_features["scene_tensor"].tensor[...,:8] # to exclude agents id from scene_tensor
         scene_tensor_features: SceneTensor = input_features["scene_tensor"] # [B A T C]
         global_context = self.global_encoder(scene_tensor_features) # [B L C]
 
@@ -485,7 +485,7 @@ class Nexus(TorchModuleWrapper):
     def forward_validation(self, input_features: FeaturesType) -> Dict:
         # Encode image
         # global_context = self.image_encoder(input_features)  # B, L, C
-        input_features['scene_tensor'].tensor = input_features['scene_tensor'].tensor[...,:8] # to exclude agents id from scene_tensor
+        input_features["scene_tensor"].tensor = input_features["scene_tensor"].tensor[...,:8] # to exclude agents id from scene_tensor
         scene_tensor_features: SceneTensor = input_features["scene_tensor"]
         global_context = self.global_encoder(scene_tensor_features)
 
@@ -587,7 +587,7 @@ class Nexus(TorchModuleWrapper):
         """
         # Encode image
         # global_context = self.image_encoder(input_features)
-        input_features['scene_tensor'].tensor = input_features['scene_tensor'].tensor[...,:8] # to exclude agents id from scene_tensor
+        input_features["scene_tensor"].tensor = input_features["scene_tensor"].tensor[...,:8] # to exclude agents id from scene_tensor
         scene_tensor_features: SceneTensor = input_features["scene_tensor"]
         global_context = self.global_encoder(scene_tensor_features)
 
